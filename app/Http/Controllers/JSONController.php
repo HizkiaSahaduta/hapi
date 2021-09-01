@@ -107,18 +107,64 @@ class JSONController extends Controller
 
     }
 
-    public function listqKota() {
+    public function listqProvKTP() {
 
-        $result = DB::table('member')
-                ->selectRaw('LTRIM(RTRIM(city)) as city')
-                ->where('mill_id', '=', 'HAPI')
-                ->where('city1', '<>', '')
-                ->groupBY('city')
-                ->get();
+        $result = DB::select(DB::raw("select case when province = '' then 'N/A' else LTRIM(RTRIM(province)) end as province from member where mill_id = 'HAPI' group by province"));
 
         return response()->json($result);
 
 
     }
+
+    public function listqProvDom() {
+
+        $result = DB::select(DB::raw("select case when province1 = '' then 'N/A' else LTRIM(RTRIM(province1)) end as province1 from member where mill_id = 'HAPI' group by province1"));
+
+        return response()->json($result);
+
+
+    }
+
+    public function listqKotaKTP() {
+
+        $result = DB::select(DB::raw("select case when city = '' then 'N/A' else LTRIM(RTRIM(city)) end as city from member where mill_id = 'HAPI' group by city"));
+
+        return response()->json($result);
+
+
+    }
+
+    public function listqKotaDom() {
+
+        $result = DB::select(DB::raw("select case when city1 = '' then 'N/A' else LTRIM(RTRIM(city1)) end as city1 from member where mill_id = 'HAPI' group by city1"));
+
+        return response()->json($result);
+
+
+    }
+
+    public function listqTrainee() {
+
+        $result = DB::select(DB::raw("select DISTINCT
+                case 
+                    when st_pelatihan = 'Y' and st_bnsp = 'Y' then 'Pelatihan dan Sertifikasi'
+                    when st_pelatihan = 'Y' and st_bnsp = 'N' then 'Pelatihan'
+                    when st_pelatihan = 'N' and st_bnsp = 'Y' then 'Sertifikasi'
+                    else 'N/A'
+                end as trainee from member
+                order by 1 desc"));
+
+        return response()->json($result);
+
+
+    }
+
+
+
+
+
+
+    
+
 
 }

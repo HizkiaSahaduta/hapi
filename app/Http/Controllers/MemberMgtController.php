@@ -7,6 +7,8 @@ use Session;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use App\Exports\HapiMemberExport;
+use Excel;
 
 class MemberMgtController extends Controller
 {
@@ -33,6 +35,8 @@ class MemberMgtController extends Controller
 
     public function listMember(Request $request){
 
+        $groupid = Session::get('GROUPID');
+
         $where = "where 1=1";
 
         $qTipeAnggota = $request->qTipeAnggota;
@@ -41,10 +45,63 @@ class MemberMgtController extends Controller
             $where.= " and st_anggota = '$qTipeAnggota'";
         }
 
+        $qStatus = $request->qStatus;
+        if ($qStatus) {
+
+            $where.= " and active_flag = '$qStatus'";
+        }
+
+        $qProv = $request->qProv;
+        if ($qProv) {
+
+            if ($qProv == 'N/A') {
+
+                $where.= " and province1 = ''";
+
+            }
+
+            else {
+
+                $where.= " and province1 like '%$qProv%'";
+
+            }
+
+        }
+
+        $qTrainee = $request->qTrainee;
+        if ($qTrainee) {
+
+            if ($qTrainee == 'Pelatihan&Sertifikasi') {
+
+                $where.= "  and st_pelatihan = 'Y' and st_bnsp = 'Y'";
+            
+            }
+
+            if ($qTrainee == 'Pelatihan') {
+
+                $where.= " and st_pelatihan = 'Y' and st_bnsp = 'N'";
+
+            } 
+
+            if ($qTrainee == 'Sertifikasi') {
+
+                $where.= " and st_pelatihan = 'N' and st_bnsp = 'Y'";
+            
+            } 
+
+            if ($qTrainee == 'N/A') {
+
+                $where.= " and st_pelatihan = 'N' and st_bnsp = 'N'";
+            
+            } 
+
+
+        }
+        
         $qKota = $request->qKota;
         if ($qKota) {
 
-            $where.= " and city1 like '%$qKota%' and city like '%$qKota%'";
+            $where.= " and city1 like '%$qKota%'";
 
         }
 
@@ -80,52 +137,93 @@ class MemberMgtController extends Controller
 
         }
 
+        // echo $where;
+
 
         $result = DB::select(DB::raw("select 
                                     dt_created as dt_created1, 
                                     LTRIM(RTRIM(member_id)) as member_id, 
                                     LTRIM(RTRIM(st_anggota)) as st_anggota, 
                                     LTRIM(RTRIM(member_name)) as member_name, 
-                                    LTRIM(RTRIM(city)) as city, 
+                                    LTRIM(RTRIM(province)) as province, 
+                                    LTRIM(RTRIM(city)) as city,
+                                    LTRIM(RTRIM(province1)) as province1, 
+                                    LTRIM(RTRIM(city1)) as city1, 
                                     LTRIM(RTRIM(active_flag)) as active_flag, 
-                                    FORMAT(dt_created, 'dd MMM yyyy') as dt_created
-                                    from member $where"));
+                                    FORMAT(dt_created, 'dd.MM.yyyy') as dt_created,
+                                    st_pelatihan, st_bnsp
+                                    from member $where order by 1"));
 
-         return \DataTables::of($result)
-                ->editColumn('active_flag', function ($data) {
-                    if ($data->active_flag == "Y") return '<span class="shadow-none badge badge-success"> Active</span>';
-                    return '<span class="shadow-none badge badge-danger"> N/A</span>';
-                })
-                ->addColumn('Detail', function($data) {
+        if ($groupid == 'ADMIN' || $groupid == 'DEVELOPMENT') {
 
-                    return '
-                        <a href="javascript:void(0)" data-id="'.$data->member_id.'" class="bs-tooltip editMember" data-placement="top" title="Edit">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit text-warning"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        </a>                        
-                        ';
-                    })
-                ->editColumn('activate', function ($data) {
-                    if ($data->active_flag == "Y") 
-                    return 
-                    '<label class="switch s-success">
-                        <input type="checkbox" class="setActive" id="'.$data->member_id.'" checked value="'.$data->member_id.'">
-                        <span class="slider round"></span>
-                    </label> ';
-                    if ($data->active_flag == "N") 
-                    return 
-                    '<label class="switch s-success">
-                        <input type="checkbox" class="setActive" id="'.$data->member_id.'" value="'.$data->member_id.'">
-                        <span class="slider round"></span>
-                    </label>';
+            return \DataTables::of($result)
+            ->editColumn('active_flag', function ($data) {
+                if ($data->active_flag == "Y") return '<span class="shadow-none badge badge-success"> Active</span>';
+                return '<span class="shadow-none badge badge-danger"> N/A</span>';
+            })
+            ->editColumn('st_pelatihan', function ($data) {
+                if ($data->st_pelatihan == "Y") return '<span class="shadow-none badge badge-success"> Yes</span>';
+                return '<span class="shadow-none badge badge-danger"> No</span>';
+            })
+            ->editColumn('st_bnsp', function ($data) {
+                if ($data->st_bnsp == "Y") return '<span class="shadow-none badge badge-success"> Yes</span>';
+                return '<span class="shadow-none badge badge-danger"> No</span>';
+            })
+            ->addColumn('Detail', function($data) {
+
+                return '
+                    <a href="javascript:void(0)" data-id="'.$data->member_id.'" class="bs-tooltip editMember" data-placement="top" title="Edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit text-warning"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </a>                        
+                    ';
                 })
-                ->rawColumns(['Detail','active_flag', 'activate'])
-                ->make(true);
-    }
+            ->editColumn('activate', function ($data) {
+                if ($data->active_flag == "Y") 
+                return 
+                '<label class="switch s-success">
+                    <input type="checkbox" class="setActive" id="'.$data->member_id.'" checked value="'.$data->member_id.'">
+                    <span class="slider round"></span>
+                </label> ';
+                if ($data->active_flag == "N") 
+                return 
+                '<label class="switch s-success">
+                    <input type="checkbox" class="setActive" id="'.$data->member_id.'" value="'.$data->member_id.'">
+                    <span class="slider round"></span>
+                </label>';
+            })
+            ->rawColumns(['Detail','active_flag', 'activate', 'st_pelatihan', 'st_bnsp'])
+            ->make(true);
+
+        }
+
+        else {
+
+            return \DataTables::of($result)
+            ->editColumn('active_flag', function ($data) {
+                if ($data->active_flag == "Y") return '<span class="shadow-none badge badge-success"> Active</span>';
+                return '<span class="shadow-none badge badge-danger"> N/A</span>';
+            })
+            ->editColumn('st_pelatihan', function ($data) {
+                if ($data->st_pelatihan == "Y") return '<span class="shadow-none badge badge-success"> Yes</span>';
+                return '<span class="shadow-none badge badge-danger"> No</span>';
+            })
+            ->editColumn('st_bnsp', function ($data) {
+                if ($data->st_bnsp == "Y") return '<span class="shadow-none badge badge-success"> Yes</span>';
+                return '<span class="shadow-none badge badge-danger"> No</span>';
+            })
+            ->rawColumns(['active_flag', 'st_pelatihan', 'st_bnsp'])
+            ->make(true);
+
+        }
+
+        
+}
 
     public function saveDataMember(Request $request){ 
 
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+        //  $tr_date = now();
+        $tr_date = now();
         $txtMillID = 'HAPI';
         $txtActiveFlag = 'Y';
         $txtCountries = 'Indonesia';
@@ -370,7 +468,7 @@ class MemberMgtController extends Controller
     public function saveMemberCert(Request $request){ 
 
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
         $txtMillID = 'HAPI';
         $txtActiveFlag = 'Y';
         $txtMemberID = $request->txtMemberIDTmp;
@@ -501,7 +599,7 @@ class MemberMgtController extends Controller
     public function saveEditMemberCert(Request $request){ 
 
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
         $txtMemberID = $request->txtMemberIDTmpEdit;
         $txtNumID = $request->txtNumIDEdit;
         $txtCertName = $request->txtCertNameEdit;
@@ -599,7 +697,7 @@ class MemberMgtController extends Controller
         $txtMemberID = $request->txtMemberIDKTP;
         $txtKTP = $request->file('txtKTP');
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
 
         if ($txtKTP) {
 
@@ -680,7 +778,7 @@ class MemberMgtController extends Controller
         $txtMemberID = $request->txtMemberIDIjazah;
         $txtIjazah = $request->file('txtIjazah');
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
 
         if ($txtIjazah) {
 
@@ -762,7 +860,7 @@ class MemberMgtController extends Controller
     public function deleteKTP(Request $request){
 
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
         $txtMemberID = $request->txtMemberID;
 
         try {
@@ -806,7 +904,7 @@ class MemberMgtController extends Controller
     public function deleteIjazah(Request $request){
 
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
         $txtMemberID = $request->txtMemberID;
 
         try {
@@ -899,7 +997,7 @@ class MemberMgtController extends Controller
         $txtMemberID = $request->txtMemberID;
         $txtSetActive = $request->txtSetActive;
         $userid = Session::get('USERNAME');
-        $tr_date = Carbon::now();
+         $tr_date = now();
 
 
         if ($txtSetActive == "Y") {
@@ -951,6 +1049,75 @@ class MemberMgtController extends Controller
 
         }
        
+    }
+
+    public function member_to_excel(Request $request) {
+
+        if($request->qTipeAnggota) {
+            $qTipeAnggota = $request->qTipeAnggota;
+        }
+        else {
+            $qTipeAnggota = '';
+        }
+
+        if($request->qStatus) {
+            $qStatus = $request->qStatus;
+        }
+        else {
+            $qStatus = '';
+        }
+
+        if($request->qTrainee) {
+            $qTrainee = $request->qTrainee;
+        }
+        else {
+            $qTrainee = '';
+        }
+        
+        if($request->qProv){
+            $qProv = $request->qProv;
+        }
+        else {
+            $qProv = '';
+        }
+        
+        if($request->qKota){
+            $qKota = $request->qKota;
+        }
+        else {
+            $qKota = '';
+        }
+        
+        if($request->qMemberID){
+            $qMemberID = $request->qMemberID;
+        }
+        else{
+            $qMemberID = '';
+        }
+       
+        if($request->qNama){
+            $qNama = $request->qNama;
+        }
+        else{
+            $qNama = '';
+        }
+       
+        if($request->qStartDate) {
+            $qStartDate = $request->qStartDate;
+        }
+        else{
+            $qStartDate = '';
+        }
+      
+        if($request->qEndDate){
+            $qEndDate = $request->qEndDate;
+        }
+        else{
+            $qEndDate = '';
+        }
+    
+        return Excel::download(new HapiMemberExport($qTipeAnggota, $qStatus, $qTrainee, $qProv, $qKota, $qMemberID, $qNama, $qStartDate, $qEndDate), 'MemberHAPIReport.xlsx');
+        
     }
 
 

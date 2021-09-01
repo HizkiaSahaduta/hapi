@@ -192,24 +192,31 @@ hr.style {
                         <table id="TraineeTable" class="table wrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Aksi</th>
-                                    <th>Event ID</th>
-                                    <th>Kantor Cabang</th>
-                                    <th>Tanggal Penyelenggaraan</th>
-                                    {{-- <th>ID Pelatihan/Sertifikasi</th> --}}
-                                    <th>Status</th>
-                                    <th>Peserta</th>
-                                    <th>Jenis</th>
-                                    <th>Nama</th>
-                                    <th>Keterangan</th>
-                                    {{-- <th>Remark</th> --}}
-                                    <th>Penyelenggara</th>
-                                    {{-- <th>Alamat Pelaksanaan</th>
-                                    <th>Kota Pelaksanaan</th>
-                                    <th>Peserta</th> --}}
-                                    {{-- <th>Tanggal Dibuat</th>
-                                    <th>Tanggal Perubahan</th>
-                                    <th>Dibuat Oleh</th> --}}
+
+                                    @if(Session::get('GROUPID') == 'ADMIN' or Session::get('GROUPID') == 'DEVELOPMENT')
+                                        <th>Aksi</th>
+                                        <th>Event ID</th>
+                                        <th>Kantor Cabang</th>
+                                        <th>Tanggal Penyelenggaraan</th>
+                                        <th>Status</th>
+                                        <th>Peserta</th>
+                                        <th>Jenis</th>
+                                        <th>Nama</th>
+                                        <th>Keterangan</th>
+                                        <th>Penyelenggara</th> 
+                                    @else
+                                        <th>Event ID</th>
+                                        <th>Kantor Cabang</th>
+                                        <th>Tanggal Penyelenggaraan</th>
+                                        <th>Status</th>
+                                        <th>Peserta</th>
+                                        <th>Jenis</th>
+                                        <th>Nama</th>
+                                        <th>Keterangan</th>
+                                        <th>Penyelenggara</th>              
+                                    @endif
+                                    
+                
                                 </tr>
                             </thead>
                         </table>
@@ -684,9 +691,10 @@ hr.style {
 <script src="{{ asset('outside/plugins/input-mask/jquery.inputmask.bundle.min.js') }}"></script>
 <script src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js" type="text/javascript" ></script>
 <script>
-var latest_id, block, dataTable3, listMemberID, f1, f2, f3, f4, listMemberClosing, txtTypeEvent;
 
+var latest_id, block, dataTable3, listMemberID, f1, f2, f3, f4, listMemberClosing, txtTypeEvent;
 var qTrainingID, qTrainingType, qEventID, qStatus;
+var groupid = '{{ Session::get('GROUPID') }}'
 
 //For search filter
 var qqOfficeID, qqStatus, qqTrainingID, qqTrainingType, qqStartDate, qqEndDate;
@@ -1158,7 +1166,7 @@ function listqTrainingType(){
 
 }
 
-function listTraineeTable(){
+function listTraineeTable(groupid){
 
     
     qqOfficeID = $('#qOfficeID').val();
@@ -1169,73 +1177,129 @@ function listTraineeTable(){
     qqEndDate = $('#qEndDate').val();
 
     // blockUI();
+
+    if (groupid == 'ADMIN' || groupid == 'DEVELOPMENT') {
     
-    var dataTable = $('#TraineeTable').DataTable({
-        "oLanguage": {
-            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
-            "sInfo": "Showing page _PAGE_ of _PAGES_",
-            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-            "sSearchPlaceholder": "Search",
-            "sLengthMenu": "Show :  _MENU_ entries",
+        var dataTable = $('#TraineeTable').DataTable({
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search",
+                "sLengthMenu": "Show :  _MENU_ entries",
+                },
+            // order: [ [1, 'asc'] ],
+            stripeClasses: [],
+            lengthMenu: [5, 10, 20, 50],
+            pageLength: 10,
+            destroy : true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                'url':'{!!url("listTrainee")!!}',
+                'type': 'post',
+                data: {
+                        '_token': '{{ csrf_token() }}',
+                        'qOfficeID' : qqOfficeID,
+                        'qStatus' : qqStatus,
+                        'qTrainingID' : qqTrainingID,
+                        'qTrainingType' : qqTrainingType,
+                        'qStartDate' : qqStartDate,
+                        'qEndDate' : qqEndDate
+                    }
             },
-        order: [ [1, 'asc'] ],
-        stripeClasses: [],
-        lengthMenu: [5, 10, 20, 50],
-        pageLength: 10,
-        destroy : true,
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        autoWidth: false,
-        ajax: {
-            'url':'{!!url("listTrainee")!!}',
-            'type': 'post',
-            data: {
-                    '_token': '{{ csrf_token() }}',
-                    'qOfficeID' : qqOfficeID,
-                    'qStatus' : qqStatus,
-                    'qTrainingID' : qqTrainingID,
-                    'qTrainingType' : qqTrainingType,
-                    'qStartDate' : qqStartDate,
-                    'qEndDate' : qqEndDate
+            columns: [
+                {data: 'Detail', name: 'Detail',orderable:false,searchable:false},
+                {data: 'trx_id', name: 'trx_id'},
+                {data: 'office_name', name: 'office_name'},
+                {data: 'dt_trx', name: 'dt_trx'},
+                {data: 'stat', name: 'stat'},
+                {data: 'qty_member', name: 'qty_member'},
+                {data: 'descr_mst_training', name: 'descr_mst_training'},
+                {data: 'descr_mst_training_type', name: 'descr_mst_training_type'},
+                {data: 'descr_event', name: 'descr_event'},
+                {data: 'agency', name: 'agency'}
+            ],
+            initComplete: function(settings, json) {
+
+                if (!dataTable.rows().data().length) {
+
+                    $.unblockUI();
+
+                    swal("Whops", "Data not available", "error");
                 }
-        },
-        columns: [
-            {data: 'Detail', name: 'Detail',orderable:false,searchable:false},
-            {data: 'trx_id', name: 'trx_id'},
-            {data: 'office_name', name: 'office_name'},
-            // {data: 'dt_created', name: 'dt_created'},
-            {data: 'dt_trx', name: 'dt_trx'},
-            {data: 'stat', name: 'stat'},
-            {data: 'qty_member', name: 'qty_member'},
-            {data: 'descr_mst_training', name: 'descr_mst_training'},
-            {data: 'descr_mst_training_type', name: 'descr_mst_training_type'},
-            {data: 'descr_event', name: 'descr_event'},
-            // {data: 'remark', name: 'remark'},
-            {data: 'agency', name: 'agency'},
-            // {data: 'address', name: 'address'},
-            // {data: 'city', name: 'city'},
-            // {data: 'qty_member', name: 'qty_member'},
-            // {data: 'dt_created', name: 'dt_created'},
-            // {data: 'dt_modified', name: 'dt_modified'},
-            // {data: 'user_id', name: 'user_id'},
-        ],
-        initComplete: function(settings, json) {
 
-            if (!dataTable.rows().data().length) {
+                else {
 
-                $.unblockUI();
+                    $.unblockUI();
+                    
+                }
+            },
+        });
+    }
+    else {
 
-                swal("Whops", "Data not available", "error");
-            }
+        var dataTable = $('#TraineeTable').DataTable({
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search",
+                "sLengthMenu": "Show :  _MENU_ entries",
+                },
+            // order: [ [1, 'asc'] ],
+            stripeClasses: [],
+            lengthMenu: [5, 10, 20, 50],
+            pageLength: 10,
+            destroy : true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                'url':'{!!url("listTrainee")!!}',
+                'type': 'post',
+                data: {
+                        '_token': '{{ csrf_token() }}',
+                        'qOfficeID' : qqOfficeID,
+                        'qStatus' : qqStatus,
+                        'qTrainingID' : qqTrainingID,
+                        'qTrainingType' : qqTrainingType,
+                        'qStartDate' : qqStartDate,
+                        'qEndDate' : qqEndDate
+                    }
+            },
+            columns: [
+                {data: 'trx_id', name: 'trx_id'},
+                {data: 'office_name', name: 'office_name'},
+                {data: 'dt_trx', name: 'dt_trx'},
+                {data: 'stat', name: 'stat'},
+                {data: 'qty_member', name: 'qty_member'},
+                {data: 'descr_mst_training', name: 'descr_mst_training'},
+                {data: 'descr_mst_training_type', name: 'descr_mst_training_type'},
+                {data: 'descr_event', name: 'descr_event'},
+                {data: 'agency', name: 'agency'}
+            ],
+            initComplete: function(settings, json) {
 
-            else {
+                if (!dataTable.rows().data().length) {
 
-                $.unblockUI();
-                
-            }
-        },
-    });
+                    $.unblockUI();
+
+                    swal("Whops", "Data not available", "error");
+                }
+
+                else {
+
+                    $.unblockUI();
+                    
+                }
+            },
+        });
+
+    }
 
 }
 
@@ -1284,7 +1348,13 @@ $(document).ready(function() {
     listqStatus();
     listqTrainingID();
     listqTrainingType();
-    listTraineeTable();
+    listTraineeTable(groupid);
+
+    @if(Session::get('GROUPID') == 'ADMIN' or Session::get('GROUPID') == 'DEVELOPMENT')
+        $("#btnAddTrainee").show();
+    @else
+        $("#btnAddTrainee").hide();
+    @endif
 
     $('.basic').on('select2:open', function() {
         if (Modernizr.touch) {
@@ -1435,7 +1505,7 @@ $(document).ready(function() {
 
         $("#SearchModal").modal('hide');
 
-        listTraineeTable();
+        listTraineeTable(groupid);
 
 
     });
@@ -1452,7 +1522,7 @@ $(document).ready(function() {
 
         $("#SearchModal").modal('hide');
 
-        listTraineeTable();
+        listTraineeTable(groupid);
 
     });
 

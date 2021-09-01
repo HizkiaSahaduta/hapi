@@ -2,8 +2,16 @@
 
 {{-- Content Page CSS Begin--}}
 @section('contentcss')
+<link href="{{ asset('outside/plugins/table/datatable/datatables.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('outside/plugins/table/datatable/dt-global_style.css') }}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.4/css/responsive.dataTables.min.css" />
 <link href="{{ asset('outside/assets/css/elements/infobox.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('outside/plugins/notification/snackbar/snackbar.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('outside/assets/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
 <style>
+
+.widget-content-area {
+  box-shadow: none !important; }
 
 .widget-one {
     background: transparent;
@@ -43,6 +51,11 @@ h6 {
 .list-group-item {
     background: #5797fb !important;
     color: #fff !important;
+}
+
+.modal-dialog {
+    max-width: 1200px;
+    margin: 1.75rem auto;
 }
 
 @media (max-width: 991px) {
@@ -118,183 +131,13 @@ h6 {
 <div class="layout-px-spacing">
 	<div class="row layout-top-spacing">
 
-        <div class="col-lg-12 col-md-12 layout-spacing">
+       
+        <div class="col-lg-2 layout-spacing layout-spacing">
             <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Welcome
-                                {{ Session::get('NAME1') }}
-                                {{ Session::get('NAME2') }}
-                                {{ Session::get('NAME3') }}
-                                {{-- @if(session()->has('MILLID'))
-                                    {{ Session::get('MILLID') }}
-                                @endif --}}
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="widget-content-area">
-                    <div class="widget-one">
-                        <div class="infobox-3" style="margin-left: 0px">
-                            <div class="info-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                            </div>
-                            <h5 class="info-heading">HAPI E-Portal</h5>
-                            <p class="info-text">Here we are, providing anything you want :)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- @if(Session::get('GROUPID') != 'STAFF')
-        <div class="col-lg-3 col-6 layout-spacing">
-            <div class="widget widget-account-invoice-two">
-                <div class="widget-content">
-                    <div class="account-box">
-                        <div class="info">
-                            <h6 class="">{{ $subMonth }} {{ $year }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="orderThisYearSubMonth">N/A</p>&nbsp;<span class="badge" id="orderPercentSub"></span>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countOrderThisYearSubMonth">N/A
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtThisYearSubMonth">N/A</p>                            
-                        </div>
-                        <div class="info">
-                            <h6 class="">{{ $subMonth }} {{ $subYear }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="orderSubYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countOrderSubYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtSubYearSubMonth">N/A</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-6 layout-spacing">
-
-            <div class="widget widget-account-invoice-two">
-                <div class="widget-content">
-                    <div class="account-box">
-                        <div class="info">
-                            <h6 class="">{{ $month }} {{ $year }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="orderThisYear">N/A</p>&nbsp;<span class="badge" id="orderPercent"></span>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countOrderThisYear">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtThisYear">N/A</p>
-                        </div>
-                        <div class="info">
-                            <h6 class="">{{ $month }} {{ $subYear }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="orderSubYear">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countOrderSubYear">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtSubYear">N/A</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-6 layout-spacing">
-
-            <div class="widget widget-account-invoice-two">
-                <div class="widget-content">
-                    <div class="account-box">
-                        <div class="info">
-                            <h6 class="">INVOICE {{ $subMonth }} {{ $year }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="invThisYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countInvThisYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtInvThisYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info">
-                            <h6 class="">{{ $subMonth }} {{ $subYear }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="invSubYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countInvSubYearSubMonth">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtInvSubYearSubMonth">N/A</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-3 col-6 layout-spacing">
-
-            <div class="widget widget-account-invoice-two">
-                <div class="widget-content">
-                    <div class="account-box">
-                        <div class="info">
-                            <h6 class="">INVOICE {{ $month }} {{ $year }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="invThisYear">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countInvThisYear">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtInvThisYear">N/A</p>
-                        </div>
-                        <div class="info">
-                            <h6 class="">{{ $month }} {{ $subYear }}</h6>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="invSubYear">N/A</p>
-                        </div>
-                        <div class="info">
-                            <p class="inv-balance" id="countInvSubYear">N/A</p>
-                        </div>
-                        <div class="info border-bottom">
-                            <p class="inv-balance" id="wgtInvSubYear">N/A</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-lg-12 layout-spacing">
-            <div class="statbox widget box box-shadow chartContainer1">
-                <div class="widget-header">
-                    <div class="row">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4 class="m-0">Monthly Order</h4>
-                            <p style="padding: 0px 15px; font-size: 11px; font-style: italic;">K: thousand, M: million, B: billion</p>
+                            <h4 class="m-0">Total Anggota</h4>
                         </div>
                     </div>
                 </div>
@@ -306,12 +149,12 @@ h6 {
             </div>
         </div>
 
-        <div class="col-lg-4 layout-spacing layout-spacing">
-            <div class="statbox widget box box-shadow chartContainer2">
+        <div class="col-lg-5 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4 class="m-0">Order Performance in <b>{{ $subYear }}</b> </h4>
+                            <h4 class="m-0">Aplikator Per Wilayah/Kota</h4>
                         </div>
                     </div>
                 </div>
@@ -322,13 +165,13 @@ h6 {
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-4 layout-spacing layout-spacing">
-            <div class="statbox widget box box-shadow chartContainer3">
+
+        <div class="col-lg-5 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4 class="m-0">Order Performance in <b> {{ $year }} </b> </h4>
+                            <h4 class="m-0">Anggota - Terlatih & Tersertifikasi</h4>
                         </div>
                     </div>
                 </div>
@@ -339,13 +182,13 @@ h6 {
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-4 layout-spacing layout-spacing">
-            <div class="statbox widget box box-shadow chartContainer4">
+
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4 class="m-0">Order Performance in <b> {{ $month }} </b> </h4>
+                            <h4 class="m-0">Jumlah Pelatihan & Sertifikasi</h4>
                         </div>
                     </div>
                 </div>
@@ -356,8 +199,158 @@ h6 {
                 </div>
             </div>
         </div>
-        @endif --}}
 
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <h4 class="m-0">Jumlah Peserta Pelatihan & Sertifikasi</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+
+                    <div id="chartContainer5" style="height: 370px; width: 100%;"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="headerModal"></div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <div id="Cstep1" style="display: none">
+                    <div class="table-responsive">
+                        <table id="Member" class="table mb-4" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID Anggota</th>
+                                    <th>Tipe Anggota</th>
+                                    <th>Nama</th>
+                                    <th>Prov (Dom)</th>
+                                    <th>Kota (Dom)</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Bergabung</th>
+                                    <th>Pelatihan</th>
+                                    <th>Sertifikasi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>   
+                </div>  
+
+                <div id="Cstep2" style="display: none">
+                    <div class="widget-content widget-content-area">
+                        <div id="chartContainer7" style="height: 200px; width: 100%;"></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="Member2" class="table mb-4" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID Anggota</th>
+                                    <th>Tipe Anggota</th>
+                                    <th>Nama</th>
+                                    <th>Prov (Dom)</th>
+                                    <th>Kota (Dom)</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Bergabung</th>
+                                    <th>Pelatihan</th>
+                                    <th>Sertifikasi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>   
+                </div>  
+
+                <div id="Cstep3" style="display: none">
+                    <div class="table-responsive">
+                        <table id="Member3" class="table mb-4" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID Anggota</th>
+                                    <th>Tipe Anggota</th>
+                                    <th>Nama</th>
+                                    <th>Prov (Dom)</th>
+                                    <th>Kota (Dom)</th>
+                                    <th>Status</th>
+                                    <th>Tanggal Bergabung</th>
+                                    <th>Pelatihan</th>
+                                    <th>Sertifikasi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>   
+                </div>  
+
+                <div id="Cstep4" style="display: none">
+                    <div class="table-responsive">
+                        <table id="Trainee" class="table mb-4" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Kantor Cabang</th>
+                                    <th>Tanggal Penyelenggaraan</th>
+                                    <th>Status</th>
+                                    <th>Peserta</th>
+                                    <th>Jenis</th>
+                                    <th>Nama</th>
+                                    <th>Keterangan</th>
+                                    <th>Penyelenggara</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>  
+
+
+                <div id="Cstep5" style="display: none">
+                    <div class="widget-content widget-content-area">
+                        <div id="chartContainer6" style="height: 200px; width: 100%;"></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="TraineeDtl" class="table mb-4" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Kantor Cabang</th>
+                                    <th>Tanggal Penyelenggaraan</th>
+                                    <th>Jenis</th>
+                                    <th>Nama</th>
+                                    <th>ID Anggota</th>
+                                    <th>Tipe Anggota</th>
+                                    <th>Status</th>
+                                    <th>Nama Anggota</th>
+                                    <th>Prov (Dom)</th>
+                                    <th>Kota (Dom)</th>
+                                    <th>Telp</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>   
+                </div>  
+    
+  
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -366,208 +359,46 @@ h6 {
 
 {{-- Content Page JS Begin--}}
 @section('contentjs')
-
-<script src="{{ asset('canvasjs.min.js') }}"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.4/js/dataTables.responsive.min.js"></script>
+<script src="{{ asset('outside/plugins/notification/snackbar/snackbar.min.js') }}"></script>
 <script src="{{ asset('outside/plugins/blockui/jquery.blockUI.min.js') }}"></script>
+<script src="{{ asset('canvasjs.min.js') }}"></script>
+@if(\Session::has('success'))
+    <script>
+        var success = "{{ Session::get('success') }}"
+        Snackbar.show({
+            text: success,
+            pos: 'top-center'
+        });
+
+    </script>
+@endif
 
 <script type="text/javascript">
 
-var dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, container;
-
-var months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May',
-    'Jun', 'Jul', 'Aug', 'Sep',
-    'Oct', 'Nov', 'Dec'
-];
-
 var x = window.matchMedia("(max-width: 991px)")
 
-function monthNumToName(monthnum) {
-    return months[monthnum - 1] || '';
-}
+function blockUI(){
 
-function getDashboardItems(){
-
-    $.ajax({
-        url: "{{ url('getDashboardItems') }}",
-        type: "POST",
-        cache: false,
-        dataType: "json",
-        success:function(data) {
-
-            if (data.countOrderThisYear['total'] == null) {data.countOrderThisYear['total'] = 0;}
-            if (data.countOrderThisYearSubMonth['total'] == null) {data.countOrderThisYearSubMonth['total'] = 0;}
-            if (data.orderSubYear['total'] == null) {data.orderSubYear['total'] = 0;}
-            if (data.countOrderSubYear['total'] == null) {data.countOrderSubYear['total'] = 0;}
-            if (data.orderSubYearSubMonth['total'] == null) {data.orderSubYearSubMonth['total'] = 0;}
-            if (data.countOrderSubYearSubMonth['total'] == null) {data.countOrderSubYearSubMonth['total'] = 0;}
-
-            if (data.wgtThisYear['total'] == null) {data.wgtThisYear['total'] = 0;}
-            if (data.wgtThisYearSubMonth['total'] == null) {data.wgtThisYearSubMonth['total'] = 0}
-            if (data.wgtSubYear['total'] == null) {data.wgtSubYear['total'] = 0;}
-            if (data.wgtSubYearSubMonth['total'] == null) {data.wgtSubYearSubMonth['total'] = 0;}
-
-            if (data.invThisYear['total'] == null) {data.invThisYear['total'] = 0; }
-            if (data.countInvThisYear['total'] == null) {data.countInvThisYear['total'] = 0;}
-            if (data.invThisYearSubMonth['total'] == null) {data.invThisYearSubMonth['total'] = 0;}
-            if (data.countInvThisYearSubMonth['total'] == null) {data.countInvThisYearSubMonth['total'] = 0;}
-            if (data.invSubYear['total'] == null) {data.invSubYear['total'] = 0;}
-            if (data.countInvSubYear['total'] == null) {data.countInvSubYear['total'] = 0;}
-            if (data.invSubYearSubMonth['total'] == null) {data.invSubYearSubMonth['total'] = 0;}
-            if (data.countInvSubYearSubMonth['total'] == null) {data.countInvSubYearSubMonth['total'] = 0;}
-
-            if (data.wgtInvThisYear['total'] == null) {data.wgtInvThisYear['total'] = 0;}
-            if (data.wgtInvThisYearSubMonth['total'] == null) {data.wgtInvThisYearSubMonth['total'] = 0}
-            if (data.wgtInvSubYear['total'] == null) {data.wgtInvSubYear['total'] = 0;}
-            if (data.wgtInvSubYearSubMonth['total'] == null) {data.wgtInvSubYearSubMonth['total'] = 0;}
-
-            $("#countOrderThisYear").html(data.countOrderThisYear['total'] + ' Orders');
-            $("#countOrderThisYearSubMonth").html(data.countOrderThisYearSubMonth['total'] + ' Orders');
-            $("#orderSubYear").html(data.orderSubYear['total']);
-            $("#countOrderSubYear").html(data.countOrderSubYear['total'] + ' Orders');
-            $("#orderSubYearSubMonth").html(data.orderSubYearSubMonth['total']);
-            $("#countOrderSubYearSubMonth").html(data.countOrderSubYearSubMonth['total'] + ' Orders');
-
-            $("#wgtThisYear").html(data.wgtThisYear['total'] + ' Tons');
-            $("#wgtThisYearSubMonth").html(data.wgtThisYearSubMonth['total'] + ' Tons');
-            $("#wgtSubYear").html(data.wgtSubYear['total'] + ' Tons');
-            $("#wgtSubYearSubMonth").html(data.wgtSubYearSubMonth['total'] + ' Tons');
-
-            $("#invThisYear").html(data.invThisYear['total']);
-            $("#countInvThisYear").html(data.countInvThisYear['total'] + ' Inv.');
-            $("#invThisYearSubMonth").html(data.invThisYearSubMonth['total']);
-            $("#countInvThisYearSubMonth").html(data.countInvThisYearSubMonth['total'] + ' Inv.');
-            $("#invSubYear").html(data.invSubYear['total']);
-            $("#countInvSubYear").html(data.countInvSubYear['total'] + ' Inv.');
-            $("#invSubYearSubMonth").html(data.invSubYearSubMonth['total']);
-            $("#countInvSubYearSubMonth").html(data.countInvSubYearSubMonth['total'] + ' Inv.');
-
-            $("#wgtInvThisYear").html(data.wgtInvThisYear['total'] + ' Tons');
-            $("#wgtInvThisYearSubMonth").html(data.wgtInvThisYearSubMonth['total'] + ' Tons');
-            $("#wgtInvSubYear").html(data.wgtInvSubYear['total'] + ' Tons');
-            $("#wgtInvSubYearSubMonth").html(data.wgtInvSubYearSubMonth['total'] + ' Tons');
-
-            // $("#activeOutletThisMonth").html(data.activeOutletThisMonth['total']);
-            // $("#newCustomerThisMonth").html(data.newCustomerThisMonth['total']);
-            // $("#activeOutletSubMonth").html(data.activeOutletSubMonth['total']);
-            // $("#newCustomerSubMonth").html(data.newCustomerSubMonth['total']);
-
-            if(data.orderPercent > 0)
-            {
-                $("#orderPercent" ).addClass("badge-success");
-                $("#orderThisYear").html(data.orderThisYear['total']);
-                $("#orderPercent").html(data.orderPercent + "%");
-            }
-            else
-            {
-                $("#orderPercent" ).addClass("badge-danger");
-                $("#orderThisYear").html(data.orderThisYear['total']);
-                $("#orderPercent").html(data.orderPercent + "%");
-            }
-
-            if(data.orderPercentSub > 0)
-            {
-                $("#orderPercentSub" ).addClass("badge-success");
-                $("#orderThisYearSubMonth").html(data.orderThisYearSubMonth['total']);
-                $("#orderPercentSub").html(data.orderPercentSub + "%");
-            }
-            else
-            {
-                $("#orderPercentSub" ).addClass("badge-danger");
-                $("#orderThisYearSubMonth").html(data.orderThisYearSubMonth['total']);
-                $("#orderPercentSub").html(data.orderPercentSub + "%");
-            }
-            
-        }
-    });
-
-}
-
-function getChart1(dataPoints1, dataPoints2){
-
-    var chart1 = new CanvasJS.Chart("chartContainer1", {
-        animationEnabled: true,
-        theme: "light2",
-        exportEnabled: true,
-        axisY: {
-            crosshair: {
-                enabled: true,
-                snapToDataPoint: true
-            },
-            title: "IDR",
-            labelFormatter: addSymbols,
+    $.blockUI({
+        message: '<span class="text-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-loader spin position-left"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg></i>&nbsp; Loading</span>',
+        fadeIn: 100,
+        overlayCSS: {
+            backgroundColor: '#1b2024',
+            opacity: 0.8,
+            zIndex: 1200,
+            cursor: 'wait'
         },
-        toolTip:{
-		    shared:true
-	    },
-        legend: {
-            cursor: "pointer",
-            itemclick: toggleDataSeries
-	    },
-        data: [
-        {
-            type: "column",
-            indexLabel: "{y}",
-            indexLabelFontSize: 14,
-            indexLabelFontColor: "#FFF",
-            name: "2019 Order",
-            showInLegend: true,
-            indexLabelPlacement: "inside",  
-            indexLabelOrientation: "horizontal",
-            color: "#ed6663",
-            yValueFormatString: "#,###,,,.##",
-        },
-        {
-            type: "column",
-            indexLabel: "{y}",
-            indexLabelFontSize: 14,
-            indexLabelFontColor: "#FFF",
-            name: "2020 Order",
-            showInLegend: true,
-            indexLabelPlacement: "inside",  
-            indexLabelOrientation: "horizontal",
-            color: "#2d4059",
-            yValueFormatString: "#,###,,,.##",
-        }]
-    });
-
-    chart1.options.data[0].dataPoints = dataPoints1;
-    chart1.options.data[1].dataPoints = dataPoints2;
-
-    if (x.matches) {
-
-        for(var i = 0; i < chart1.options.data.length; i++){
-            chart1.options.data[i].indexLabelFontSize = 8;
+        css: {
+            border: 0,
+            color: '#fff',
+            zIndex: 1201,
+            padding: 0,
+            backgroundColor: 'transparent'
         }
-        chart1.render();
-    }
-    chart1.render();
-}
-
-function getChart2(dataPoints, container){
-
-    var chart2 = new CanvasJS.Chart(container, {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light2",
-        data: [{
-            type: "pie",
-            yValueFormatString: "##0.00\"%\"",
-        }]
     });
-
-    chart2.options.data[0].dataPoints = dataPoints;
-    showDefaultText(chart2, "Data Not Available");
-
-    if (x.matches) {
-
-        for(var i = 0; i < chart2.options.data.length; i++){
-            chart2.options.data[i].indexLabelFontSize = 10;
-        }
-        chart2.render();
-    }
-
-    chart2.render();
 }
 
 function addSymbols(e) {
@@ -587,6 +418,24 @@ function toggleDataSeries(e) {
 	} else {
 		e.dataSeries.visible = true;
 	}
+	e.chart.render();
+}
+
+function toggleDataPointVisibility(e) {
+	if(e.dataPoint.hasOwnProperty("actualYValue") && e.dataPoint.actualYValue !== null) {
+    e.dataPoint.y = e.dataPoint.actualYValue;
+    e.dataPoint.actualYValue = null;
+    e.dataPoint.indexLabelFontSize = null;
+    e.dataPoint.indexLabelLineThickness = null;
+    e.dataPoint.legendMarkerType = "circle";
+  } 
+  else {
+    e.dataPoint.actualYValue = e.dataPoint.y;
+    e.dataPoint.y = 0;
+    e.dataPoint.indexLabelFontSize = 0;
+    e.dataPoint.indexLabelLineThickness = 0; 
+    e.dataPoint.legendMarkerType = "cross";
+  }
 	e.chart.render();
 }
 
@@ -615,222 +464,890 @@ function showDefaultText(chart, text) {
   }
 }
 
-$(document).ready(function() {
+function getPieChart(title, label, dp, container){
+    var pie_chart = new CanvasJS.Chart(container, {
+	    animationEnabled: true,
+        title: {
+            text: title,
+            fontFamily: "Calibri",
+            fontSize: 20
+        },
+        subtitles:[
+            {
+                text: label,
+                fontFamily: "Calibri",
+                fontColor: "red",
+                fontSize: 12
+            }
+        ],
+        exportEnabled: true,
+        theme: "light2",
+        exportEnabled: true,
+		legend: {
+			itemclick: toggleDataPointVisibility
+		},
+        data: [{
 
-    $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            type: "pie",
+            click: onClick1,
+            percentFormatString: "#0.##",
+            indexLabel: "{label} #percent%",
+            indexLabelFontSize: 12,
+			showInLegend: true
+
+        }]
+    });
+    pie_chart.options.data[0].dataPoints = dp;
+    // showDefaultText(pie_chart, "No Data Found!");
+
+    if (x.matches) {
+
+        for(var i = 0; i < pie_chart.options.data.length; i++){
+            pie_chart.options.data[i].indexLabelFontSize = 8;
+        }
+        pie_chart.render();
     }
+    pie_chart.render();
+}
+
+function getChart1(title, label, dp, type, container, click){
+    var chart = new CanvasJS.Chart(container, {
+	    animationEnabled: true,
+        exportEnabled: true,
+        theme: "light2",
+        title: {
+            text: title,
+            fontFamily: "Calibri",
+            fontSize: 20
+        },
+        subtitles:[
+            {
+                text: label,
+                fontFamily: "Calibri",
+                fontColor: "red",
+                fontSize: 12
+            }
+        ],
+        exportEnabled: true,
+        axisY: {
+            crosshair: {
+			    enabled: true,
+                snapToDataPoint: true
+		    },
+            title: "Jumlah Aplikator",
+            labelFormatter: addSymbols,
+        },
+        toolTip:{
+		    shared:true
+	    },
+        legend: {
+            cursor: "pointer",
+            itemclick: toggleDataSeries
+	    },
+        data: [
+            {
+                type: type,
+                click: click,
+                name: "Aplikator",
+                showInLegend: true,
+                indexLabel: "{y}",
+                indexLabelPlacement: "outside",
+                // indexLabelOrientation: "vertical",
+                // indexLabelFontColor: "#fff",
+                indexLabelFontWeight: "bold",
+                indexLabelFontSize: 12,
+                indexLabelFontFamily: "calibri",
+                color: "#00b7c2"
+            }
+        ]
+    });
+    chart.options.data[0].dataPoints = dp;
+    // showDefaultText(chart, "No Data Found!");
+
+    if (x.matches) {
+
+        for(var i = 0; i < chart.options.data.length; i++){
+            chart.options.data[i].indexLabelFontSize = 8;
+        }
+        chart.render();
+    }
+    chart.render();
+}
+
+function getChart2(title, label, sublabel, dp1, dp2, type1, type2, name1, name2, f1, f2, container){
+    var chart = new CanvasJS.Chart(container, {
+	    animationEnabled: true,
+        exportEnabled: true,
+        theme: "light2",
+        title: {
+            text: title,
+            fontFamily: "Calibri",
+            fontSize: 20
+        },
+        subtitles:[
+            {
+                text: label,
+                fontFamily: "Calibri",
+                fontColor: "red",
+                fontSize: 12
+            }
+        ],
+        exportEnabled: true,
+        axisY: {
+            crosshair: {
+			    enabled: true,
+                snapToDataPoint: true
+		    },
+            title: sublabel,
+            labelFormatter: addSymbols,
+        },
+        toolTip:{
+		    shared:true
+	    },
+        legend: {
+            cursor: "pointer",
+            itemclick: toggleDataSeries
+	    },
+        data: [
+            {
+                type: type1,
+                click: f1,
+                name: name1,
+                showInLegend: true,
+                indexLabel: "{y}",
+                indexLabelPlacement: "outside",
+                // indexLabelOrientation: "vertical",
+                // indexLabelFontColor: "#fff",
+                indexLabelFontWeight: "bold",
+                indexLabelFontSize: 12,
+                indexLabelFontFamily: "calibri",
+                color: "#00b7c2"
+            },
+            {
+                type: type2,
+                click: f2,
+                name: name2,
+                showInLegend: true,
+                indexLabel: "{y}",
+                indexLabelPlacement: "outside",
+                // indexLabelOrientation: "vertical",
+                // indexLabelFontColor: "#fff",
+                indexLabelFontWeight: "bold",
+                indexLabelFontSize: 12,
+                indexLabelFontFamily: "calibri",
+                color: "#b52b65"
+            }
+        ]
+    });
+    chart.options.data[0].dataPoints = dp1;
+    chart.options.data[1].dataPoints = dp2;
+    // showDefaultText(chart, "No Data Found!");
+
+    if (x.matches) {
+
+        for(var i = 0; i < chart.options.data.length; i++){
+            chart.options.data[i].indexLabelFontSize = 8;
+        }
+        chart.render();
+    }
+    chart.render();
+}
+
+function initDashboard() {
+
+    blockUI();
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('getDashboard') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+        },
+        success: function(data) {
+
+            //Jumlah total anggota penuh & afiliasi (mungkin dijadikan satu diagram, dengan 2 tipe anggota)
+
+                if (data['total_anggota'].length > 0) { 
+
+                    var dp = [];
+
+                    for (var i = 0; i < data['total_anggota'].length; i++) {
+
+                        dp.push({ label: data['total_anggota'][i].tipe_anggota, y: parseFloat(data['total_anggota'][i].jml_anggota), legendText: data['total_anggota'][i].tipe_anggota });
+                    }
+
+                    getPieChart('Total: '+data['total'], '', dp, 'chartContainer1')
+                }
+
+                else if (data['total_anggota'].length < 1 ) {
+
+                    var dp = [];
+                    dp.push({ y: 0 });
+                    getPieChart('', '', dp, 'chartContainer1')
+
+                }
+
+
+            
+            //Jumlah aplikator per wilayah / per kota 
+
+                if (data['anggota_per_wilayah'].length > 0) { 
+
+                    var dp = [];
+
+                    for (var i = 0; i < data['anggota_per_wilayah'].length; i++) {
+
+                        dp.push({ label: data['anggota_per_wilayah'][i].province1, y: parseFloat(data['anggota_per_wilayah'][i].jml_aplikator) });
+                    }
+
+                    getChart1('', 'by Provinsi (Domisili)', dp, 'line', 'chartContainer2', onClick2)
+                }
+
+                else if (data['anggota_per_wilayah'].length < 1 ) {
+
+                    var dp = [];
+                    dp.push({ y: 0 });
+                    getChart1('', 'by Provinsi (Domisili)', dp, 'line', 'chartContainer2', onClick2)
+
+                }
+
+            //Jumlah aplikator yang telah mengikuti pelatihan & tersertifikasi (mungkin bisa dijadikan satu diagram, dengan 2 tipe anggota)
+
+                if (data['pelatihan_sertifikasi_penuh'].length > 0 && data['pelatihan_sertifikasi_afiliasi'].length > 0) { 
+
+                    var dp1 = [], dp2 = [];
+
+                    for (var i = 0; i < data['pelatihan_sertifikasi_penuh'].length; i++) {
+
+                        dp1.push({ label: data['pelatihan_sertifikasi_penuh'][i].keterangan, y: parseFloat(data['pelatihan_sertifikasi_penuh'][i].val) });
+                    }
+
+                    for (var i = 0; i < data['pelatihan_sertifikasi_afiliasi'].length; i++) {
+
+                        dp2.push({ label: data['pelatihan_sertifikasi_afiliasi'][i].keterangan, y: parseFloat(data['pelatihan_sertifikasi_afiliasi'][i].val) });
+                    
+                    }
+
+                    getChart2('', 'Aplikator yang telah mengikuti: ', 'Jumlah Aplikator', dp1, dp2, 'spline', 'spline', 'Anggota Penuh', 'Anggota Afiliasi', onClick3_1, onClick3_2, 'chartContainer3')
+                }
+
+                else if (data['pelatihan_sertifikasi_penuh'].length < 1 && data['pelatihan_sertifikasi_afiliasi'].length < 1) { 
+
+                    var dp1 = [], dp2 = [];
+                    dp1.push({ y: 0 });
+                    dp2.push({ y: 0 });
+                    getChart2('', 'Aplikator yang telah mengikuti: ', 'Jumlah Aplikator', dp1, dp2, 'spline', 'spline', 'Anggota Penuh', 'Anggota Afiliasi', onClick3_1, onClick3_2, 'chartContainer3')
+
+                }
+
+            //Jumlah Pelatihan & Sertifikasi Bulanan/Tahunan
+
+            
+                if (data['jml_pelatihan'].length > 0 && data['jml_sertifikasi'].length > 0) { 
+
+                    var dp1 = [], dp2 = [];
+
+                    for (var i = 0; i < data['jml_pelatihan'].length; i++) {
+
+                        dp1.push({ label: data['jml_pelatihan'][i].Periode, y: parseFloat(data['jml_pelatihan'][i].val) });
+                    }
+
+                    for (var i = 0; i < data['jml_sertifikasi'].length; i++) {
+
+                        dp2.push({ label: data['jml_sertifikasi'][i].Periode, y: parseFloat(data['jml_sertifikasi'][i].val) });
+                    
+                    }
+
+                    getChart2('', 'periode (bulan dan tahun)', 'Jumlah Pelatihan/Sertifikasi', dp1, dp2, 'line', 'line', 'Pelatihan', 'Sertifikasi', onClick4_1, onClick4_2, 'chartContainer4')
+                }
+
+                else if (data['jml_pelatihan'].length < 1 && data['jml_sertifikasi'].length < 1) { 
+
+                    var dp1 = [], dp2 = [];
+                    dp1.push({ y: 0 });
+                    dp2.push({ y: 0 });
+                    getChart2('', 'periode (bulan dan tahun)', 'Jumlah Pelatihan/Sertifikasi', dp1, dp2, 'line', 'line', 'Pelatihan', 'Sertifikasi', onClick4_1, onClick4_2, 'chartContainer4')
+
+                }
+
+
+            //Jumlah Peserta Pelatihan & Sertifikasi Bulanan/Tahunan
+
+
+                if (data['peserta_pelatihan'].length > 0 && data['peserta_sertifikasi'].length > 0) { 
+
+                    var dp1 = [], dp2 = [];
+
+                    for (var i = 0; i < data['peserta_pelatihan'].length; i++) {
+
+                        dp1.push({ label: data['peserta_pelatihan'][i].Periode, y: parseFloat(data['peserta_pelatihan'][i].val) });
+                    }
+
+                    for (var i = 0; i < data['peserta_sertifikasi'].length; i++) {
+
+                        dp2.push({ label: data['peserta_sertifikasi'][i].Periode, y: parseFloat(data['peserta_sertifikasi'][i].val) });
+                    
+                    }
+
+                    getChart2('', 'periode (bulan dan tahun)', 'Jumlah Peserta Pelatihan/Sertifikasi', dp1, dp2, 'line', 'line', 'Pelatihan', 'Sertifikasi', onClick5_1, onClick5_2, 'chartContainer5')
+                }
+
+                else if (data['peserta_pelatihan'].length < 1 && data['peserta_sertifikasi'].length < 1) { 
+
+                    var dp1 = [], dp2 = [];
+                    dp1.push({ y: 0 });
+                    dp2.push({ y: 0 });
+                    getChart2('', 'periode (bulan dan tahun)', 'Jumlah Peserta Pelatihan/Sertifikasi', dp1, dp2, 'line', 'line', 'Pelatihan', 'Sertifikasi', onClick5_1, onClick5_2, 'chartContainer5')
+
+                }
+        
+        $.unblockUI();
+        
+        
+        }
+    });
+}
+
+function onClick1(e){
+
+    var param = e.dataPoint.label
+    $("#headerModal").html('<h4>Daftar '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "block";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "none";   
+
+
+    listMemberTable(param);
+
+
+}
+
+function onClick2(e){
+
+    var param = e.dataPoint.label
+    $("#headerModal").html('<h4>Daftar Anggota Domisili '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "block";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "none";  
+    
+    $.ajax({
+        type: "POST",
+        url: "{{ url('chartCityPerProv') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            'qProv' : param
+        },
+        success: function(data) {
+
+         
+            if (data.length > 0) { 
+
+                var dp = [];
+
+                for (var i = 0; i < data.length; i++) {
+
+                    dp.push({ label: data[i].city1, y: parseFloat(data[i].jml_aplikator)});
+                }
+
+                getChart1('', '', dp, 'column', 'chartContainer7', '')
+            }
+
+            else  {
+
+                var dp = [];
+                dp.push({ y: 0 });
+                getChart1('', '', dp, 'column', 'chartContainer7', '')
+
+            }
+        }
     });
 
-    $('#homeNav').attr('data-active','true');
-    $('#homeNav').attr('aria-expanded','true');
-
-    // @if(Session::get('GROUPID') != 'STAFF')
-
-    //     var block1 = $('.chartContainer1');
-    //     $(block1).block({ 
-    //         message: 'Please Wait...',
-    //         overlayCSS: {
-    //             backgroundColor: '#000',
-    //             opacity: 0.6,
-    //             cursor: 'wait'
-    //         },
-    //         css: {
-    //             border: 0,
-    //             color: '#fff',
-    //             padding: 0,
-    //             backgroundColor: 'transparent'
-    //         }
-    //     });
-
-    //     var block2 = $('.chartContainer2');
-    //     $(block2).block({ 
-    //         message: 'Please Wait...',
-    //         overlayCSS: {
-    //             backgroundColor: '#000',
-    //             opacity: 0.6,
-    //             cursor: 'wait'
-    //         },
-    //         css: {
-    //             border: 0,
-    //             color: '#fff',
-    //             padding: 0,
-    //             backgroundColor: 'transparent'
-    //         }
-    //     });
-        
-    //     var block3 = $('.chartContainer3');
-    //     $(block3).block({ 
-    //         message: 'Please Wait...',
-    //         overlayCSS: {
-    //             backgroundColor: '#000',
-    //             opacity: 0.6,
-    //             cursor: 'wait'
-    //         },
-    //         css: {
-    //             border: 0,
-    //             color: '#fff',
-    //             padding: 0,
-    //             backgroundColor: 'transparent'
-    //         }
-    //     });
-
-    //     var block4 = $('.chartContainer4');
-    //     $(block4).block({ 
-    //         message: 'Please Wait...',
-    //         overlayCSS: {
-    //             backgroundColor: '#000',
-    //             opacity: 0.6,
-    //             cursor: 'wait'
-    //         },
-    //         css: {
-    //             border: 0,
-    //             color: '#fff',
-    //             padding: 0,
-    //             backgroundColor: 'transparent'
-    //         }
-    //     });
-
-    //     getDashboardItems();
-
-    //     // chart1
-    //     $.ajax({
-    //         type: "get",
-    //         url: "{{ url('getDashboardOrderLastYear') }}",
-    //         success: function(data) {
-
-    //             if (data.length > 0) {
-
-    //                 dataPoints1 = [];
-    //                 for (var i = 0; i < data.length; i++) {
-                    
-    //                     dataPoints1.push({ label: monthNumToName(parseInt(data[i].month)), y: parseFloat(data[i].total) });
-    //                 }
-                    
-    //                 $.ajax({
-    //                     type: "get",
-    //                     url: "{{ url('getDashboardOrderThisYear') }}",
-    //                     success: function(data) {
-
-    //                         if (data.length > 0) {
-                                
-    //                             dataPoints2 = [];
-    //                             for (var i = 0; i < data.length; i++) {
-                                    
-    //                                 dataPoints2.push({ label: monthNumToName(parseInt(data[i].month)), y: parseFloat(data[i].total) });
-    //                             }
-
-    //                             getChart1(dataPoints1, dataPoints2 );
-
-    //                             $('.chartContainer1').unblock();
-    //                         }
-
-    //                     }
-    //                 });
-    //             }
-
-    //         }
-    //     });
-
-    //     // chart2
-    //     $.ajax({
-    //         type: "get",
-    //         url: "{{ url('getDashboardOrderPrcentageLastYear') }}",
-    //         success: function(data) {
-
-    //             if (data.length > 0) {
-
-    //                 dataPoints3 = [];
-    //                 for (var i = 0; i < data.length; i++) {
-    //                     dataPoints3.push({ label: data[i].category + " " + data[i].persentase + "%", y: data[i].persentase });
-    //                 }
-    //                 container = 'chartContainer2';
-    //                 getChart2(dataPoints3, container );
-    //                 $('.chartContainer2').unblock();
-    //             }
-
-    //             else {
-                    
-    //                 dataPoints3 = [];
-    //                 dataPoints3.push({ y: 0 });
-    //                 container = 'chartContainer2';
-    //                 getChart2(dataPoints3, container );
-    //                 $('.chartContainer2').unblock();
-    //             }
+    listMemberTable2(param);
 
 
-    //         }
-    //     });
+}
 
-    //     // chart3
-    //     $.ajax({
-    //         type: "get",
-    //         url: "{{ url('getDashboardOrderPrcentageThisYear') }}",
-    //         success: function(data) {
+function onClick3_1(e){
 
-    //             if (data.length > 0) {
+    var param = e.dataPoint.label
+    var type = 'Anggota Penuh';
+    $("#headerModal").html('<h4>Daftar Anggota Penuh Yang Mengikuti '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "block";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "none";   
 
-    //                 dataPoints4 = [];
-    //                 for (var i = 0; i < data.length; i++) {
-    //                     dataPoints4.push({ label: data[i].category + " " + data[i].persentase + "%", y: data[i].persentase });
-    //                 }
-    //                 container = 'chartContainer3';
-    //                 getChart2(dataPoints4, container );
-    //                 $('.chartContainer3').unblock();
-    //             }
-
-    //             else {
-                    
-    //                 dataPoints4 = [];
-    //                 dataPoints4.push({ y: 0 });
-    //                 container = 'chartContainer3';
-    //                 getChart2(dataPoints4, container );
-    //                 $('.chartContainer3').unblock();
-    //             }
+    listMemberTable3(param, type);
 
 
-    //         }
-    //     });
+}
 
-    //     // chart4
-    //     $.ajax({
-    //         type: "get",
-    //         url: "{{ url('getDashboardOrderPrcentageThisMonth') }}",
-    //         success: function(data) {
+function onClick3_2(e){
 
-    //             if (data.length > 0) {
+    var param = e.dataPoint.label
+    var type = 'Anggota Afiliasi';
+    $("#headerModal").html('<h4>Daftar Anggota Afiliasi Yang Mengikuti '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "block";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "none";   
 
-    //                 dataPoints5 = [];
-    //                 for (var i = 0; i < data.length; i++) {
-    //                     dataPoints5.push({ label: data[i].category + " " + data[i].persentase + "%", y: data[i].persentase });
-    //                 }
-    //                 container = 'chartContainer4';
-    //                 getChart2(dataPoints5, container );
-    //                 $('.chartContainer4').unblock();
-    //             }
-
-    //             else {
-                    
-    //                 dataPoints5 = [];
-    //                 dataPoints5.push({ y: 0 });
-    //                 container = 'chartContainer4';
-    //                 getChart2(dataPoints5, container );
-    //                 $('.chartContainer4').unblock();
-    //             }
+    listMemberTable3(param, type);
 
 
-    //         }
-    //     });
-        
-    // @endif
+}
 
+function onClick4_1(e){
+
+    var param = e.dataPoint.label
+    var type = '01';
+    $("#headerModal").html('<h4>Daftar Pelatihan Periode '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "block";  
+    document.getElementById("Cstep5").style.display = "none";   
+    
+    listTraineeTable(param, type)
+
+
+}
+
+function onClick4_2(e){
+
+    var param = e.dataPoint.label
+    var type = '02';
+    $("#headerModal").html('<h4>Daftar Sertifikasi Periode '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "block";  
+    document.getElementById("Cstep5").style.display = "none";   
+    
+    listTraineeTable(param, type)
+
+
+}
+
+function onClick5_1(e){
+
+    var param = e.dataPoint.label
+    var type = '01';
+    $("#headerModal").html('<h4>Daftar Peserta Pelatihan Periode '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "block";   
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('chartDtlTraineePeriodic') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            'qPeriode' : param,
+            'qTrainingID' : type
+        },
+        success: function(data) {
+
+         
+            if (data.length > 0) { 
+
+                var dp = [];
+
+                for (var i = 0; i < data.length; i++) {
+
+                    dp.push({ label: data[i].st_anggota, y: parseFloat(data[i].jml_peserta)});
+                }
+
+                getChart1('', '', dp, 'column', 'chartContainer6')
+            }
+
+            else  {
+
+                var dp = [];
+                dp.push({ y: 0 });
+                getChart1('', '', dp, 'column', 'chartContainer6')
+
+            }
+        }
+    });
+    
+    listDtlTraineeTable(param, type)
+
+
+}
+
+function onClick5_2(e){
+
+    var param = e.dataPoint.label
+    var type = '02';
+    $("#headerModal").html('<h4>Daftar Peserta Sertifikasi Periode '+param+'</h4>')
+    $('#detailModal').modal('show');
+    document.getElementById("Cstep1").style.display = "none";
+    document.getElementById("Cstep2").style.display = "none";
+    document.getElementById("Cstep3").style.display = "none";
+    document.getElementById("Cstep4").style.display = "none";  
+    document.getElementById("Cstep5").style.display = "block";   
+
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('chartDtlTraineePeriodic') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            'qPeriode' : param,
+            'qTrainingID' : type
+        },
+        success: function(data) {
+
+         
+            if (data.length > 0) { 
+
+                var dp = [];
+
+                for (var i = 0; i < data.length; i++) {
+
+                    dp.push({ label: data[i].st_anggota, y: parseFloat(data[i].jml_peserta)});
+                }
+
+                getChart1('', '', dp, 'column', 'chartContainer6','')
+            }
+
+            else  {
+
+                var dp = [];
+                dp.push({ y: 0 });
+                getChart1('', '', dp, 'column', 'chartContainer6','')
+
+            }
+        }
+    });
+    
+    listDtlTraineeTable(param, type)
+
+
+}
+
+function listMemberTable(param) {
+
+    blockUI();
+
+    var dataTable = $('#Member').DataTable({
+        "oLanguage": {
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            "sSearchPlaceholder": "Search",
+            "sLengthMenu": "Show :  _MENU_ entries",
+            },
+        // order: [ [0, 'desc'] ],
+        stripeClasses: [],
+        lengthMenu: [5, 10, 20, 50],
+        pageLength: 5,
+        destroy : true,
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        autoWidth: false,
+        ajax: {
+            'url':'{!!url("listMember")!!}',
+            'type': 'post',
+            data: {
+                    '_token': '{{ csrf_token() }}',
+                    'qTipeAnggota' : param
+                }
+        },
+        columns: [
+            {data: 'member_id', name: 'member_id'},
+            {data: 'st_anggota', name: 'st_anggota'},
+            {data: 'member_name', name: 'member_name'},
+            // {data: 'province', name: 'province'},
+            // {data: 'city', name: 'city'},
+            {data: 'province1', name: 'province1'},
+            {data: 'city1', name: 'city1'},
+            {data: 'active_flag', name: 'active_flag'},
+            {data: 'dt_created', name: 'dt_created'},
+            {data: 'st_pelatihan', name: 'st_pelatihan'},
+            {data: 'st_bnsp', name: 'st_bnsp'}
+        ],
+        initComplete: function(settings, json) {
+
+            if (!dataTable.rows().data().length) {
+
+                $.unblockUI();
+
+                swal("Whops", "Data not available", "error");
+            }
+
+            else {
+
+                $.unblockUI();
+            }
+        },
+    });
+}
+
+function listMemberTable2(param) {
+
+    blockUI();
+
+    var dataTable = $('#Member2').DataTable({
+        "oLanguage": {
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            "sSearchPlaceholder": "Search",
+            "sLengthMenu": "Show :  _MENU_ entries",
+            },
+        // order: [ [0, 'desc'] ],
+        stripeClasses: [],
+        lengthMenu: [5, 10, 20, 50],
+        pageLength: 5,
+        destroy : true,
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        autoWidth: false,
+        ajax: {
+            'url':'{!!url("listMember")!!}',
+            'type': 'post',
+            data: {
+                    '_token': '{{ csrf_token() }}',
+                    'qProv' : param
+                }
+        },
+        columns: [
+            {data: 'member_id', name: 'member_id'},
+            {data: 'st_anggota', name: 'st_anggota'},
+            {data: 'member_name', name: 'member_name'},
+            // {data: 'province', name: 'province'},
+            // {data: 'city', name: 'city'},
+            {data: 'province1', name: 'province1'},
+            {data: 'city1', name: 'city1'},
+            {data: 'active_flag', name: 'active_flag'},
+            {data: 'dt_created', name: 'dt_created'},
+            {data: 'st_pelatihan', name: 'st_pelatihan'},
+            {data: 'st_bnsp', name: 'st_bnsp'}
+        ],
+        initComplete: function(settings, json) {
+
+            if (!dataTable.rows().data().length) {
+
+                $.unblockUI();
+
+                swal("Whops", "Data not available", "error");
+            }
+
+            else {
+
+                $.unblockUI();
+            }
+        },
+    });
+}
+
+function listMemberTable3(param, type) {
+
+    blockUI();
+
+    var dataTable = $('#Member3').DataTable({
+        "oLanguage": {
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            "sSearchPlaceholder": "Search",
+            "sLengthMenu": "Show :  _MENU_ entries",
+            },
+        // order: [ [0, 'desc'] ],
+        stripeClasses: [],
+        lengthMenu: [5, 10, 20, 50],
+        pageLength: 5,
+        destroy : true,
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        autoWidth: false,
+        ajax: {
+            'url':'{!!url("listMember")!!}',
+            'type': 'post',
+            data: {
+                    '_token': '{{ csrf_token() }}',
+                    'qTipeAnggota' : type,
+                    'qTrainee': param
+                }
+        },
+        columns: [
+            {data: 'member_id', name: 'member_id'},
+            {data: 'st_anggota', name: 'st_anggota'},
+            {data: 'member_name', name: 'member_name'},
+            // {data: 'province', name: 'province'},
+            // {data: 'city', name: 'city'},
+            {data: 'province1', name: 'province1'},
+            {data: 'city1', name: 'city1'},
+            {data: 'active_flag', name: 'active_flag'},
+            {data: 'dt_created', name: 'dt_created'},
+            {data: 'st_pelatihan', name: 'st_pelatihan'},
+            {data: 'st_bnsp', name: 'st_bnsp'}
+        ],
+        initComplete: function(settings, json) {
+
+            if (!dataTable.rows().data().length) {
+
+                $.unblockUI();
+
+                swal("Whops", "Data not available", "error");
+            }
+
+            else {
+
+                $.unblockUI();
+            }
+        },
+    });
+}
+
+function listTraineeTable(param, type){
+
+    blockUI();
+
+    var dataTable = $('#Trainee').DataTable({
+        "oLanguage": {
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            "sSearchPlaceholder": "Search",
+            "sLengthMenu": "Show :  _MENU_ entries",
+            },
+        // order: [ [1, 'asc'] ],
+        stripeClasses: [],
+        lengthMenu: [5, 10, 20, 50],
+        pageLength: 5,
+        destroy : true,
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        autoWidth: false,
+        ajax: {
+            'url':'{!!url("listTraineePeriodic")!!}',
+            'type': 'post',
+            data: {
+                    '_token': '{{ csrf_token() }}',
+                    'qPeriode' : param,
+                    'qTrainingID' : type
+                }
+        },
+        columns: [
+            {data: 'trx_id', name: 'trx_id'},
+            {data: 'office_name', name: 'office_name'},
+            {data: 'dt_trx', name: 'dt_trx'},
+            {data: 'stat', name: 'stat'},
+            {data: 'qty_member', name: 'qty_member'},
+            {data: 'descr_mst_training', name: 'descr_mst_training'},
+            {data: 'descr_mst_training_type', name: 'descr_mst_training_type'},
+            {data: 'descr_event', name: 'descr_event'},
+            {data: 'agency', name: 'agency'},
+        ],
+        initComplete: function(settings, json) {
+
+            if (!dataTable.rows().data().length) {
+
+                $.unblockUI();
+
+                swal("Whops", "Data not available", "error");
+            }
+
+            else {
+
+                $.unblockUI();
+                
+            }
+        },
+    });
+}
+
+function listDtlTraineeTable(param, type){
+
+    blockUI();
+
+    var dataTable = $('#TraineeDtl').DataTable({
+        "oLanguage": {
+            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+            "sSearchPlaceholder": "Search",
+            "sLengthMenu": "Show :  _MENU_ entries",
+            },
+        // order: [ [1, 'asc'] ],
+        stripeClasses: [],
+        lengthMenu: [5, 10, 20, 50],
+        pageLength: 5,
+        destroy : true,
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        autoWidth: false,
+        ajax: {
+            'url':'{!!url("listDtlTraineePeriodic")!!}',
+            'type': 'post',
+            data: {
+                    '_token': '{{ csrf_token() }}',
+                    'qPeriode' : param,
+                    'qTrainingID' : type
+                }
+        },
+        columns: [
+            {data: 'trx_id', name: 'trx_id'},
+            {data: 'office_name', name: 'office_name'},
+            {data: 'dt_trx', name: 'dt_trx'},
+            {data: 'descr_mst_training', name: 'descr_mst_training'},
+            {data: 'descr_mst_training_type', name: 'descr_mst_training_type'},
+            {data: 'member_id', name: 'member_id'},
+            {data: 'st_anggota', name: 'st_anggota'},
+            {data: 'stat', name: 'stat'},
+            {data: 'member_name', name: 'member_name'},
+            {data: 'prov_dom', name: 'prov_dom'},
+            {data: 'city_dom', name: 'city_dom'},
+            {data: 'phone', name: 'phone'}
+        ],
+        initComplete: function(settings, json) {
+
+            if (!dataTable.rows().data().length) {
+
+                $.unblockUI();
+
+                swal("Whops", "Data not available", "error");
+            }
+
+            else {
+
+                $.unblockUI();
+                
+            }
+        },
+    });
+}
+
+
+
+$(document).ready(function() { 
+
+    
+    initDashboard();
 
 });
 
-
-
 </script>
+
+
 
 @endsection
 {{-- Content Page JS End--}}

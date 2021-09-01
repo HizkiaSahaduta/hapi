@@ -170,22 +170,44 @@ hr.style {
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zoom-in"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
                         Filter Pencarian
                     </a>
+
+                    <a href="javascript:void(0)" class="btn btn-success mb-2" id="to_excel">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Export to Excel
+                    </a>
+
+
                     <a href="javascript:void(0)" class="btn btn-dark mb-2" id="btnBack" style="display: none">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                         Kembali
                     </a>
+
+                   
                     <div class="table-responsive" id="divTableMember">
                         <table id="Member" class="table mb-4" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>ID Anggota</th>
-                                    <th>Tipe Anggota</th>
-                                    <th>Nama</th>
-                                    <th>Kota</th>
-                                    <th>Status</th>
-                                    <th>Tanggal Bergabung</th>
-                                    <th>Edit</th>
-                                    <th>Aktif Y/N</th>
+
+                                    @if(Session::get('GROUPID') == 'ADMIN' || Session::get('GROUPID') == 'DEVELOPMENT')
+                                        <th>ID Anggota</th>
+                                        <th>Tipe Anggota</th>
+                                        <th>Nama</th>
+                                        <th>Prov (Dom)</th>
+                                        <th>Kota (Dom)</th>
+                                        <th>Status</th>
+                                        <th>Tanggal Bergabung</th>
+                                        <th>Edit</th>
+                                        <th>Aktif Y/N</th>
+                                    @else
+                                        <th>ID Anggota</th>
+                                        <th>Tipe Anggota</th>
+                                        <th>Nama</th>
+                                        <th>Prov (Dom)</th>
+                                        <th>Kota (Dom)</th>
+                                        <th>Status</th>
+                                        <th>Tanggal Bergabung</th>
+                                    @endif
+
                                 </tr>
                             </thead>
                         </table>
@@ -822,7 +844,38 @@ hr.style {
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-dark" for="qKota">Kota</label>
+                                <label class="text-dark" for="qStatus">Status</label>
+                                <select class="form-control basic" name="qStatus" id="qStatus">
+                                    <option></option>
+                                    <option value="Y">Aktif</option>
+                                    <option value="N">NonAktif</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row mb-6">
+                            <div class="form-group col-md-12">
+                                <label class="text-dark" for="qTrainee">Telah Mengikuti</label>
+                                <div id="qTraineeLoading">
+                                    <select class="form-control basic" name="qTrainee" id="qTrainee">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-row mb-6">
+                            <div class="form-group col-md-6">
+                                <label class="text-dark" for="qProv">Provinsi (Dom)</label>
+                                <div id="qProvLoading">
+                                    <select class="form-control basic" name="qProv" id="qProv">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-dark" for="qKota">Kota (Dom)</label>
                                 <div id="qKotaLoading">
                                     <select class="form-control basic" name="qKota" id="qKota">
                                         <option></option>
@@ -923,8 +976,8 @@ hr.style {
 
 
 var setId, f1, f2, f3;
-
-var qTipeAnggota, qKota, qMemberID, qNama, qStartDate, qEndDate;
+var qTipeAnggota, qStatus, qTrainee, qProv, qKota, qMemberID, qNama, qStartDate, qEndDate;
+var groupid = '{{ Session::get('GROUPID') }}'
 
 function blockUI(){
 
@@ -1155,6 +1208,32 @@ function listqTipeAnggota(){
 
 }
 
+function listqProv(){
+
+    var block = $('#qProvLoading');
+    blockElement(block);
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "{{url('listqProvDom')}}",
+        success: function (data) {
+            $(block).unblock()
+            $('select[name="qProv"]').empty();
+            $('select[name="qProv"]').prepend('<option></option>');
+            
+            $.each(data, function(index, element) {
+                $('select[name="qProv"]').append('<option value="'+element.province1+'">'+element.province1+'</option>');
+            });
+        }
+    });
+    $('#qProv').select2({
+        placeholder: 'Pilih Provinsi (Dom)',
+        allowClear: true,
+        dropdownParent: $('#SearchModal')
+    });
+
+}
+
 function listqKota(){
 
     var block = $('#qKotaLoading');
@@ -1162,28 +1241,66 @@ function listqKota(){
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "{{url('listqKota')}}",
+        url: "{{url('listqKotaDom')}}",
         success: function (data) {
             $(block).unblock()
             $('select[name="qKota"]').empty();
             $('select[name="qKota"]').prepend('<option></option>');
             
             $.each(data, function(index, element) {
-                $('select[name="qKota"]').append('<option value="'+element.city+'">'+element.city+'</option>');
+                $('select[name="qKota"]').append('<option value="'+element.city1+'">'+element.city1+'</option>');
             });
         }
     });
     $('#qKota').select2({
-        placeholder: 'Pilih Kota',
+        placeholder: 'Pilih Kota (Dom)',
         allowClear: true,
         dropdownParent: $('#SearchModal')
     });
 
 }
 
-function listMemberTable() {
+function listqStatus(){
+
+    $('#qStatus').select2({
+        placeholder: 'Pilih Status',
+        allowClear: true,
+        dropdownParent: $('#SearchModal')
+    });
+}
+
+function listqTrainee(){
+
+    var block = $('#qTraineeLoading');
+    blockElement(block);
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "{{url('listqTrainee')}}",
+        success: function (data) {
+            $(block).unblock()
+            $('select[name="qTrainee"]').empty();
+            $('select[name="qTrainee"]').prepend('<option></option>');
+            
+            $.each(data, function(index, element) {
+                $('select[name="qTrainee"]').append('<option value="'+element.trainee+'">'+element.trainee+'</option>');
+            });
+        }
+    });
+    $('#qTrainee').select2({
+        placeholder: 'Apa saja yang sudah diikuti ?',
+        allowClear: true,
+        dropdownParent: $('#SearchModal')
+    });
+
+}
+
+function listMemberTable(groupid) {
 
     qTipeAnggota = $('#qTipeAnggota').val();
+    qStatus = $('#qStatus').val();
+    qTrainee = $('#qTrainee').val();
+    qProv = $('#qProv').val();
     qKota = $('#qKota').val();
     qMemberID = $('#qMemberID').val();
     qNama = $('#qNama').val();
@@ -1192,61 +1309,133 @@ function listMemberTable() {
 
     blockUI();
 
-    var dataTable = $('#Member').DataTable({
-        "oLanguage": {
-            "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
-            "sInfo": "Showing page _PAGE_ of _PAGES_",
-            "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-            "sSearchPlaceholder": "Search",
-            "sLengthMenu": "Show :  _MENU_ entries",
+    if (groupid == 'ADMIN' || groupid == 'DEVELOPMENT') {
+
+        var dataTable = $('#Member').DataTable({
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search",
+                "sLengthMenu": "Show :  _MENU_ entries",
+                },
+            // order: [ [0, 'desc'] ],
+            stripeClasses: [],
+            lengthMenu: [5, 10, 20, 50],
+            pageLength: 10,
+            destroy : true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                'url':'{!!url("listMember")!!}',
+                'type': 'post',
+                data: {
+                        '_token': '{{ csrf_token() }}',
+                        'qTipeAnggota' : qTipeAnggota,
+                        'qStatus' : qStatus,
+                        'qTrainee' : qTrainee,
+                        'qProv' : qProv,
+                        'qKota' : qKota,
+                        'qMemberID' : qMemberID,
+                        'qNama' : qNama,
+                        'qStartDate' : qStartDate,
+                        'qEndDate' : qEndDate
+                    }
             },
-        order: [ [0, 'desc'] ],
-        stripeClasses: [],
-        lengthMenu: [5, 10, 20, 50],
-        pageLength: 10,
-        destroy : true,
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        autoWidth: false,
-        ajax: {
-            'url':'{!!url("listMember")!!}',
-            'type': 'post',
-            data: {
-                    '_token': '{{ csrf_token() }}',
-                    'qTipeAnggota' : qTipeAnggota,
-                    'qKota' : qKota,
-                    'qMemberID' : qMemberID,
-                    'qNama' : qNama,
-                    'qStartDate' : qStartDate,
-                    'qEndDate' : qEndDate
+            columns: [
+                {data: 'member_id', name: 'member_id'},
+                {data: 'st_anggota', name: 'st_anggota'},
+                {data: 'member_name', name: 'member_name'},
+                {data: 'province1', name: 'province1'},
+                {data: 'city1', name: 'city1'},
+                {data: 'active_flag', name: 'active_flag'},
+                {data: 'dt_created', name: 'dt_created'},
+                {data: 'Detail', name: 'Detail',orderable:false,searchable:false},
+                {data: 'activate', name: 'activate',orderable:false,searchable:false}
+            ],
+            initComplete: function(settings, json) {
+
+                if (!dataTable.rows().data().length) {
+
+                    $.unblockUI();
+
+                    swal("Whops", "Data not available", "error");
                 }
-        },
-        columns: [
-            {data: 'member_id', name: 'member_id'},
-            {data: 'st_anggota', name: 'st_anggota'},
-            {data: 'member_name', name: 'member_name'},
-            {data: 'city', name: 'city'},
-            {data: 'active_flag', name: 'active_flag'},
-            {data: 'dt_created', name: 'dt_created'},
-            {data: 'Detail', name: 'Detail',orderable:false,searchable:false},
-            {data: 'activate', name: 'activate',orderable:false,searchable:false}
-        ],
-        initComplete: function(settings, json) {
 
-            if (!dataTable.rows().data().length) {
+                else {
 
-                $.unblockUI();
+                    $.unblockUI();
+                }
+            },
+        });
 
-                swal("Whops", "Data not available", "error");
-            }
+    }
 
-            else {
+    else {
 
-                $.unblockUI();
-            }
-        },
-    });
+         var dataTable = $('#Member').DataTable({
+            "oLanguage": {
+                "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
+                "sInfo": "Showing page _PAGE_ of _PAGES_",
+                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
+                "sSearchPlaceholder": "Search",
+                "sLengthMenu": "Show :  _MENU_ entries",
+                },
+            // order: [ [0, 'desc'] ],
+            stripeClasses: [],
+            lengthMenu: [5, 10, 20, 50],
+            pageLength: 10,
+            destroy : true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                'url':'{!!url("listMember")!!}',
+                'type': 'post',
+                data: {
+                        '_token': '{{ csrf_token() }}',
+                        'qTipeAnggota' : qTipeAnggota,
+                        'qStatus' : qStatus,
+                        'qTrainee' : qTrainee,
+                        'qProv' : qProv,
+                        'qKota' : qKota,
+                        'qMemberID' : qMemberID,
+                        'qNama' : qNama,
+                        'qStartDate' : qStartDate,
+                        'qEndDate' : qEndDate
+                    }
+            },
+            columns: [
+                {data: 'member_id', name: 'member_id'},
+                {data: 'st_anggota', name: 'st_anggota'},
+                {data: 'member_name', name: 'member_name'},
+                {data: 'province1', name: 'province1'},
+                {data: 'city1', name: 'city1'},
+                {data: 'active_flag', name: 'active_flag'},
+                {data: 'dt_created', name: 'dt_created'}
+            ],
+            initComplete: function(settings, json) {
+
+                if (!dataTable.rows().data().length) {
+
+                    $.unblockUI();
+
+                    swal("Whops", "Data not available", "error");
+                }
+
+                else {
+
+                    $.unblockUI();
+                }
+            },
+        });
+
+    }
+
+   
 }
 
 $(document).ready(function() {
@@ -1268,6 +1457,7 @@ $(document).ready(function() {
 
     // listProv(); listProvDom(); listCity(); listCityDom(); 
     listGender(); listEducation(); listStatMember(); listIndustrial();
+    listMemberTable(groupid); listqTipeAnggota(); listqProv(); listqKota(); listqStatus(); listqTrainee();
 
     f1 = flatpickr(document.getElementById('txtDOB'), {
         altInput: true,
@@ -1304,9 +1494,11 @@ $(document).ready(function() {
 
     $('#DocTitle').text(html1);
 
-    listMemberTable();
-    listqTipeAnggota();
-    listqKota();
+    @if(Session::get('GROUPID') == 'ADMIN' or Session::get('GROUPID') == 'DEVELOPMENT')
+        $("#btnAddMember").show();
+    @else
+        $("#btnAddMember").hide();
+    @endif
 
     $('#btnAddMember').on('click', function() {
 
@@ -1316,6 +1508,7 @@ $(document).ready(function() {
         $("#btnBack").show();
         $("#btnAddMember").hide();
         $("#btnFilter").hide();
+        $("#to_excel").hide();
         divTableMember.style.display = "none";
         memberForm.style.display = "block";
         $('#DocTitle').text(html2);
@@ -1335,10 +1528,11 @@ $(document).ready(function() {
         $("#btnBack").hide();
         $("#btnAddMember").show();
         $("#btnFilter").show();
+        $("#to_excel").show();
         divTableMember.style.display = "block";
         memberForm.style.display = "none";
         $('#DocTitle').text(html1);
-        listMemberTable();
+        listMemberTable(groupid);
 
     });
 
@@ -2180,6 +2374,7 @@ $(document).ready(function() {
         $("#btnBack").show();
         $("#btnAddMember").hide();
         $("#btnFilter").hide();
+        $("#to_excel").hide();
         divTableMember.style.display = "none";
         memberForm.style.display = "block";
         $('#DocTitle').text(html3);
@@ -2503,7 +2698,7 @@ $(document).ready(function() {
 
         $("#SearchModal").modal('hide');
 
-        listMemberTable();
+        listMemberTable(groupid);
 
 
     });
@@ -2512,6 +2707,9 @@ $(document).ready(function() {
 
 
         $('#qTipeAnggota').val(null).trigger('change');
+        $('#qStatus').val('Y').trigger('change');
+        $('#qTrainee').val(null).trigger('change');
+        $('#qProv').val(null).trigger('change');
         $('#qKota').val(null).trigger('change');
         $('#qMemberID').val('');
         $('#qMemberName').val('');
@@ -2520,13 +2718,33 @@ $(document).ready(function() {
 
         $("#SearchModal").modal('hide');
 
-        listMemberTable();
+        listMemberTable(groupid);
 
 
         
    
 
 
+    });
+
+    $('#to_excel').on('click', function() {
+        
+        event.preventDefault();
+        
+        qTipeAnggota = $('#qTipeAnggota').val();
+        qStatus = $('#qStatus').val();
+        qTrainee = $('#qTrainee').val();
+        qProv = $('#qProv').val();
+        qKota = $('#qKota').val();
+        qMemberID = $('#qMemberID').val();
+        qNama = $('#qNama').val();
+        qStartDate = $('#qStartDate').val();
+        qEndDate =$('#qEndDate').val();
+
+        var data = 'qTipeAnggota='+qTipeAnggota+ '&qStatus='+qStatus+ '&qTrainee='+qTrainee+ '&qProv='+qProv+ '&qKota='+qKota+ '&qMemberID='+qMemberID+ '&qNama='+qNama+ '&qStartDate='+qStartDate+ '&qEndDate='+qEndDate;
+        var url = "{{url('member_to_excel')}}?" + data;
+        window.location.href = url;
+      
     });
 
     

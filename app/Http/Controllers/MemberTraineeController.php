@@ -33,6 +33,7 @@ class MemberTraineeController extends Controller
 
     public function listTrainee(Request $request){
 
+        $groupid = Session::get('GROUPID');
         $office_id = Session::get('OFFICEID');
 
         if ($office_id){
@@ -92,7 +93,7 @@ class MemberTraineeController extends Controller
         }
 
         $result = DB::select(DB::raw("select LTRIM(RTRIM(a.trx_id)) as trx_id,
-        FORMAT(a.dt_trx, 'dd MMM yyyy') as dt_trx,
+        FORMAT(a.dt_trx, 'dd.MM.yyyy') as dt_trx,
         LTRIM(RTRIM(b.office_name)) as office_name, 
         LTRIM(RTRIM(c.descr)) as descr_mst_training, 
         LTRIM(RTRIM(d.descr)) as descr_mst_training_type, 
@@ -109,10 +110,11 @@ class MemberTraineeController extends Controller
         from event_hdr a 
         inner join office b on a.office_id = b.office_id
         inner join mst_training c on a.train_id = c.train_id
-        inner join mst_type_training d on a.train_type_id = d.train_type_id $where"));
-                    
+        inner join mst_type_training d on a.train_type_id = d.train_type_id $where order by a.dt_trx"));
 
-         return \DataTables::of($result)
+        if ($groupid == 'ADMIN' || $groupid == 'DEVELOPMENT') {
+
+            return \DataTables::of($result)
                 ->editColumn('stat', function ($data) {
                     if ($data->stat == "P") return '<span class="shadow-none badge badge-success"> Planned</span>';
                     if ($data->stat == "C") return '<span class="shadow-none badge badge-secondary"> Closed</span>';
@@ -128,6 +130,24 @@ class MemberTraineeController extends Controller
                 ->rawColumns(['stat','Detail'])
                 ->make(true);
 
+
+        }
+
+        else {
+
+            return \DataTables::of($result)
+            ->editColumn('stat', function ($data) {
+                if ($data->stat == "P") return '<span class="shadow-none badge badge-success"> Planned</span>';
+                if ($data->stat == "C") return '<span class="shadow-none badge badge-secondary"> Closed</span>';
+            })
+            ->rawColumns(['stat'])
+            ->make(true);
+
+
+        }
+                    
+
+         
         // echo $where;
     }
 
@@ -372,7 +392,7 @@ class MemberTraineeController extends Controller
 
                         ]);
 
-                    return response()->json(['response' => "Data sukses diperbaharui"]);
+                return response()->json(['response' => "Data sukses diperbaharui"]);
             }
 
             else {
@@ -399,7 +419,7 @@ class MemberTraineeController extends Controller
 
                         ]);
 
-                    return response()->json(['response' => "Data sukses disimpan"]);
+                return response()->json(['response' => "Data sukses disimpan"]);
 
             }
                     

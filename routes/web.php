@@ -60,6 +60,8 @@ Route::post('setActive', 'MemberMgtController@setActive')->name('setActive');
 Route::get('MemberTrainee', 'MemberTraineeController@index')->name('MemberTrainee');
 Route::post('MemberCert', 'MemberCertController@index')->name('MemberCert');
 
+Route::get('member_to_excel','MemberMgtController@member_to_excel');
+
 //-- User Mgmt
 Route::get('MyAccount', 'MyAccountController@index')->name('MyAccount');
 Route::get('ChangePass', 'ChangePassController@index')->name('ChangePass');
@@ -71,6 +73,7 @@ Route::get('getUser/id={id}&id2={id2}', 'AddUserController@getUser');
 Route::get('delUser/id={id}&id2={id2}', 'AddUserController@delUser');
 Route::post('editUser', 'AddUserController@editUser')->name('editUser');
 
+
 //-- Master Training
 Route::get('MasterTraining', 'MstTrainingController@index')->name('MasterTraining');
 Route::post('listTraining', 'MstTrainingController@listTraining')->name('listTraining');
@@ -81,7 +84,11 @@ Route::post('editTraining', 'MstTrainingController@editTraining')->name('editTra
 Route::get('listIndustrial', 'JSONController@listIndustrial');
 Route::get('getMemberID', 'JSONController@getMemberID');
 Route::get('getTrainingID', 'JSONController@getTrainingID');
-Route::get('listqKota', 'JSONController@listqKota');
+Route::get('listqProvKTP', 'JSONController@listqProvKTP');
+Route::get('listqProvDom', 'JSONController@listqProvDom');
+Route::get('listqKotaKTP', 'JSONController@listqKotaKTP');
+Route::get('listqKotaDom', 'JSONController@listqKotaDom');
+Route::get('listqTrainee', 'JSONController@listqTrainee');
 
 //-- JSON Trainee
 Route::get('getEventID', 'JSONController@getEventID');
@@ -103,6 +110,16 @@ Route::post('getQtyEventMember', 'MemberTraineeController@getQtyEventMember');
 Route::post('getAvailMember', 'MemberTraineeController@getAvailMember')->name('getAvailMember');
 Route::post('deleteMemberEvent', 'MemberTraineeController@deleteMemberEvent')->name('deleteMemberEvent');
 Route::post('checkTypeTraining', 'MemberTraineeController@checkTypeTraining')->name('checkTypeTraining');
+
+
+//-- Dashboard
+Route::post('getDashboard', 'HomeController@getDashboard')->name('getDashboard');
+Route::post('listTraineePeriodic', 'HomeController@listTraineePeriodic')->name('listTraineePeriodic');
+Route::post('listDtlTraineePeriodic', 'HomeController@listDtlTraineePeriodic')->name('listDtlTraineePeriodic');
+Route::post('chartDtlTraineePeriodic', 'HomeController@chartDtlTraineePeriodic')->name('chartDtlTraineePeriodic');
+Route::post('chartCityPerProv', 'HomeController@chartCityPerProv')->name('chartCityPerProv');
+
+
 
 
 
