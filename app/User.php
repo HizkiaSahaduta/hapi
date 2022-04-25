@@ -12,6 +12,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
 
     protected $table = 'sec_user';
+    protected $primaryKey = 'user_num';
     /**
      * The attributes that are mass assignable.
      *
