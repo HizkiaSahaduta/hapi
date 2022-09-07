@@ -159,12 +159,53 @@ class JSONController extends Controller
 
     }
 
+    public function listMasterPekerjaan(Request $request)
+    {
+        $sqlWhere = '1=1';
 
+        $works = DB::table('pekerjaan')
+                    ->selectRaw('id, TRIM(pekerjaan) as pekerjaan')
+                    ->where('mill_id', '=', 'HAPI')
+                    ->where('active_flag', '=', 'Y')
+                    ->whereRaw($sqlWhere)
+                    ->get();
 
+        return response()->json($works);
 
+    }
 
+    public function listMasterProvinsi(Request $request)
+    {
+        $sqlWhere = '1=1';
 
+        $works = DB::table('provinsi')
+                    ->selectRaw('id, TRIM(nama) as nama')
+                    ->whereRaw($sqlWhere)
+                    ->get();
+
+        return response()->json($works);
+
+    }
     
+    public function listMasterKota(Request $request)
+    {
+        $sqlWhere = '1=1';
+
+        $provinsi_id = $request->provinsi_id;
+
+        if (!empty($provinsi_id))
+        {
+            $sqlWhere = $sqlWhere . " and prov = " . "'" . $provinsi_id . "'";
+        }
+
+        $works = DB::table('kabupaten')
+                    ->selectRaw('id, TRIM(nama) as nama, TRIM(prov) as prov')
+                    ->whereRaw($sqlWhere)
+                    ->get();
+
+        return response()->json($works);
+
+    }
 
 
 }

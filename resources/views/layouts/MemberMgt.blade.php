@@ -313,22 +313,18 @@ hr.style {
                                         <div class="form-row mb-6">
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtProv">Provinsi<span style="font-size: 10px; font-style: italic;"> (KTP)</span></label>
-                                                <input type="text" name="txtProvText" id="txtProvText" class="form-control" placeholder="Provinsi sesuai KTP">
-                                                {{-- <input type="hidden" name="txtProvText" id="txtProvText">
-                                                <div id="txtProv_loading">
-                                                <select class="form-control basic" name="txtProv" id="txtProv">
+                                                <select class="form-control basic" name="txtProvText" id="txtProvText">
                                                     <option></option>
                                                 </select>
-                                                </div> --}}
                                             </div>
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtCity">Kota/Kab.<span style="font-size: 10px; font-style: italic;"> (KTP)</span></label>
-                                                <input type="text" name="txtCity" id="txtCity" class="form-control" placeholder="Kota sesuai KTP">
-                                                {{-- <div id="txtCity_loading">
-                                                <select class="form-control basic" name="txtCity" id="txtCity">
-                                                    <option></option>
-                                                </select>
-                                                </div> --}}
+                                                <!-- <input type="text" name="txtCity" id="txtCity" class="form-control" placeholder="Kota sesuai KTP"> -->
+                                                <div id="txtCity_loading">
+                                                    <select class="form-control basic" name="txtCity" id="txtCity">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -342,22 +338,18 @@ hr.style {
                                         <div class="form-row mb-6">
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtProvDom">Provinsi<span style="font-size: 10px; font-style: italic;"> (Dom)</span></label>
-                                                <input type="text" name="txtProvDomText" id="txtProvDomText" class="form-control" placeholder="Provinsi sesuai domisili">
-                                                {{-- <input type="hidden" name="txtProvDomText" id="txtProvDomText">
-                                                <div id="txtProvDom_loading">
-                                                <select class="form-control basic" name="txtProvDom" id="txtProvDom">
+                                                <select class="form-control basic" name="txtProvDomText" id="txtProvDomText">
                                                     <option></option>
                                                 </select>
-                                                </div> --}}
                                             </div>
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtCityDom">Kota/Kab.<span style="font-size: 10px; font-style: italic;"> (Dom)</span></label>
-                                                <input type="text" name="txtCityDom" id="txtCityDom" class="form-control" placeholder="Kota sesuai domisili">
-                                                {{-- <div id="txtCityDom_loading">
-                                                <select class="form-control basic" name="txtCityDom" id="txtCityDom">
-                                                    <option></option>
-                                                </select>
-                                                </div> --}}
+                                                <!-- <input type="text" name="txtCityDom" id="txtCityDom" class="form-control" placeholder="Kota sesuai domisili"> -->
+                                                <div id="txtCityDom_loading">
+                                                    <select class="form-control basic" name="txtCityDom" id="txtCityDom">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -420,7 +412,10 @@ hr.style {
                                         <div class="form-row mb-6">
                                             <div class="form-group col-md-10">
                                                 <label class="text-dark" for="txtJob">Pekerjaan</label>
-                                                <input type="text" name="txtJob" id="txtJob" class="form-control">
+                                                <input type="hidden" name="txtJobName" id="txtJobName">
+                                                <select class="form-control basic" name="txtJob" id="txtJob">
+                                                    <option></option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -455,6 +450,13 @@ hr.style {
                                         <div class="form-row mb-6">
 
                                             <div class="form-group col-md-10">
+
+                                                <div class="n-chk">
+                                                    <label class="new-control new-checkbox checkbox-danger">
+                                                    <input type="checkbox" name="txtKorda" id="txtKorda" class="new-control-input" value="st_korda">
+                                                    <span class="new-control-indicator text-dark"></span>KORDA
+                                                    </label>
+                                                </div>
 
                                                 <div class="n-chk">
                                                     <label class="new-control new-checkbox checkbox-primary">
@@ -1113,6 +1115,203 @@ function listIndustrial(){
 
 }
 
+function listPekerjaan(){
+
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterPekerjaan') }}",
+        success: function(data) {
+
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtJob"]').empty();
+                $('select[name="txtJob"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtJob"]').append('<option value="'+element.pekerjaan+'" selected>'+element.pekerjaan+'</option>');
+                });
+                $('#txtJob').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtJob"]').empty();
+                $('select[name="txtJob"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtJob"]').append('<option value="'+element.pekerjaan+'">'+element.pekerjaan+'</option>');
+                });
+                $('#txtJob').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtJob').select2({
+        placeholder: 'Pilih Pekerjaan',
+        allowClear: true
+    });
+
+
+}
+
+function listProvinsiDomisili(){
+
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterProvinsi') }}",
+        success: function(data) {
+
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtProvDomText"]').empty();
+                $('select[name="txtProvDomText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                });
+                $('#txtProvDomText').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtProvDomText"]').empty();
+                $('select[name="txtProvDomText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                });
+                $('#txtProvDomText').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtProvDomText').select2({
+        placeholder: 'Pilih Provinsi Domisili',
+        allowClear: true
+    });
+
+
+}
+
+function listProvinsi(){
+
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterProvinsi') }}",
+        success: function(data) {
+
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtProvText"]').empty();
+                $('select[name="txtProvText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                });
+                $('#txtProvText').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtProvText"]').empty();
+                $('select[name="txtProvText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                });
+                $('#txtProvText').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtProvText').select2({
+        placeholder: 'Pilih Provinsi sesuai KTP',
+        allowClear: true
+    });
+
+
+}
+
+function listCity(params) {
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterKota') }}" +"?provinsi_id=" + params,
+        success: function(data) {
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtCity"]').empty();
+                $('select[name="txtCity"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtCity"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                });
+                $('#txtCity').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtCity"]').empty();
+                $('select[name="txtCity"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtCity"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                });
+                $('#txtCity').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtCity').select2({
+        placeholder: 'Pilih Kota sesuai KTP',
+        allowClear: true
+    });
+}
+
+function listCityDom(params) {
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterKota') }}" +"?provinsi_id=" + params,
+        success: function(data) {
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtCityDom"]').empty();
+                $('select[name="txtCityDom"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtCityDom"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                });
+                $('#txtCityDom').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtCityDom"]').empty();
+                $('select[name="txtCityDom"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtCityDom"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                });
+                $('#txtCityDom').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtCityDom').select2({
+        placeholder: 'Pilih Kota Domisili',
+        allowClear: true
+    });
+}
+
 function getMemberID(){
 
     $.ajax({
@@ -1456,7 +1655,7 @@ $(document).ready(function() {
     var block = $('#modalLoad');
 
     // listProv(); listProvDom(); listCity(); listCityDom(); 
-    listGender(); listEducation(); listStatMember(); listIndustrial();
+    listGender(); listEducation(); listStatMember(); listIndustrial(); listPekerjaan(); listProvinsiDomisili(); listProvinsi();
     listMemberTable(groupid); listqTipeAnggota(); listqProv(); listqKota(); listqStatus(); listqTrainee();
 
     f1 = flatpickr(document.getElementById('txtDOB'), {
@@ -1536,44 +1735,26 @@ $(document).ready(function() {
 
     });
 
-    $('#txtProv').change(function(){
+    $('#txtProvText').change(function(){
         
-        var id = $("#txtProv").val();
+        var id = $("#txtProvText").val();
         var block = $('#txtCity_loading');
-        blockElement(block);
 
         if (id) {
+            blockElement(block);
 
-            $.ajax({
-              url: 'https://x.rajaapi.com/MeP7c5ne' + window.return_first + '/m/wilayah/kabupaten',
-              data: "idpropinsi=" +id,
-              type: 'GET',
-              cache: false,
-              dataType: 'json',
-              success: function(json) {
-                if (json.code == 200) {
-                    
-                    $(block).unblock();
-                    $('select[name="txtCity"]').empty();
-                    $('select[name="txtCity"]').prepend('<option></option>');
-                        for (i = 0; i < Object.keys(json.data).length; i++) {
-                            $('#txtCity').append($('<option>').text(json.data[i].name).attr('value', json.data[i].nama));
-                        }
+            listCity(id);
 
-                    $('#txtCity').select2({
-                        placeholder: 'Pilih Kota/Kab.',
-                        allowClear: true
-                    });
-                }
-              }
-          });
-
+            setInterval(() => {
+                $(block).unblock();
+            }, 1000);
         }
         else {
-            $(block).unblock();
-            $('select[name="txtCity"]').empty();
-            $('select[name="txtCity"]').prepend('<option></option>');
             listCity();
+
+            setInterval(() => {
+                $(block).unblock();
+            }, 1000);
         }
  
     });
@@ -1601,45 +1782,28 @@ $(document).ready(function() {
 
     });
 
-    $('#txtProvDom').change(function(){
-        var id = $("#txtProvDom").val();
-        var block = $('#txtCityDom_loading');
-        blockElement(block);
+    $('#txtProvDomText').change(function(){
+        var id = $("#txtProvDomText").val();
+        var block = $('#txtCityDom_loading'); 
+
+        console.log(id);
 
         if (id) {
+            blockElement(block);
 
-            $.ajax({
-              url: 'https://x.rajaapi.com/MeP7c5ne' + window.return_first + '/m/wilayah/kabupaten',
-              data: "idpropinsi=" +id,
-              type: 'GET',
-              cache: false,
-              dataType: 'json',
-              success: function(json) {
-                if (json.code == 200) {
-                    
-                    $(block).unblock();
-                    $('select[name="txtCityDom"]').empty();
-                    $('select[name="txtCityDom"]').prepend('<option></option>');
-                        for (i = 0; i < Object.keys(json.data).length; i++) {
-                            $('#txtCityDom').append($('<option>').text(json.data[i].name).attr('value', json.data[i].nama));
-                        }
+            listCityDom(id);
 
-                    $('#txtCityDom').select2({
-                        placeholder: 'Pilih Kota/Kab.',
-                        allowClear: true
-                    });
-                }
-              }
-          });
-
+            setInterval(() => {
+                $(block).unblock();
+            }, 1000);
         }
         else {
-            $(block).unblock();
-            $('select[name="txtCityDom"]').empty();
-            $('select[name="txtCityDom"]').prepend('<option></option>');
-            listCity();
+            listCityDom();
+
+            setInterval(() => {
+                $(block).unblock();
+            }, 1000);
         }
- 
     });
 
     $('#resetDOB').on('click', function() {
@@ -1701,6 +1865,7 @@ $(document).ready(function() {
         var txtProvDom = $('#txtProvDomText').val();
         var txtCityDom = $('#txtCityDom').val();
         var txtGender = $('#txtGender').val();
+        var txtJob = $('#txtJob').val();
 
         if (!txtNoIDCard) {
             swal("Whoops", "No.Identitas harus diisi", "error")
@@ -1732,6 +1897,7 @@ $(document).ready(function() {
 
         // if (txtNoIDCard && txtName && txtAddress && txtProv && txtCity && txtAddressDom && txtProvDom && txtCityDom && txtGender){
         if (txtNoIDCard && txtName){
+
 
             // var a = document.getElementById("txtProv");
             // var txtProv = a.options[a.selectedIndex].text;
@@ -1792,7 +1958,7 @@ $(document).ready(function() {
                     }
             
                 }
-         })
+            })
 
         }
         
@@ -2423,11 +2589,11 @@ $(document).ready(function() {
                         $('#txtNoIDCard').val(element.ident_id);
                         // $("#txtNoIDCard").attr("readonly", "readonly"); 
                         $('#txtAddress').val(element.address);
-                        $('#txtProvText').val(element.province);
-                        $('#txtCity').val(element.city);
+                        $('#txtProvText').val(element.province).trigger('change');
+                        $('#txtCity').val(element.city).trigger('change');
                         $('#txtAddressDom').val(element.address1);
-                        $('#txtProvDomText').val(element.province1);
-                        $('#txtCityDom').val(element.city1);
+                        $('#txtProvDomText').val(element.province1).trigger('change');
+                        $('#txtCityDom').val(element.city1).trigger('change');
                         // $('#txtBirthplace').val(element.birth_place);
 
                         var dob =  element.date_birth
@@ -2450,7 +2616,7 @@ $(document).ready(function() {
                         $('#txtPhone').val(element.phone);
                         $('#txtEmail').val(element.email);
                         $("#txtEducation").val(element.last_educ).trigger('change');
-                        $('#txtJob').val(element.job);
+                        $('#txtJob').val(element.job).trigger('change');
                         $('#txtJabatan').val(element.position);
                         $("#txtStatMember").val(element.st_anggota).trigger('change');
                         $("#txtIndustrial").val(element.position_id).trigger('change');
@@ -2487,6 +2653,17 @@ $(document).ready(function() {
                         else {
 
                             $("#txtStatCert").prop("checked", false);
+                        }
+
+                        if (element.korda == 'Y') {
+
+                            $("#txtKorda").prop("checked", true);
+
+                        }
+
+                        else {
+
+                            $("#txtKorda").prop("checked", false);
                         }
 
                         var drEvent2 = $('#txtKTP').dropify();

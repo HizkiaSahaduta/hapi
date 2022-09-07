@@ -89,6 +89,9 @@ Route::get('listqProvDom', 'JSONController@listqProvDom');
 Route::get('listqKotaKTP', 'JSONController@listqKotaKTP');
 Route::get('listqKotaDom', 'JSONController@listqKotaDom');
 Route::get('listqTrainee', 'JSONController@listqTrainee');
+Route::get('listMasterPekerjaan', 'JSONController@listMasterPekerjaan');
+Route::get('listMasterProvinsi', 'JSONController@listMasterProvinsi');
+Route::get('listMasterKota', 'JSONController@listMasterKota');
 
 //-- JSON Trainee
 Route::get('getEventID', 'JSONController@getEventID');
