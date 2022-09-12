@@ -330,12 +330,9 @@ class MemberMgtController extends Controller
             $txtStatCert = 'Y';
         }
 
-        $txtKorda = $request->txtKorda;
-        if(!$txtKorda){
-            $txtKorda = 'N';
-        }
-        else{
-            $txtKorda = 'Y';
+        $txtOfficeID = $request->txtOfficeID;
+        if(!$txtOfficeID){
+            $txtOfficeID = null;
         }
 
         try {
@@ -403,7 +400,7 @@ class MemberMgtController extends Controller
                             'dt_created' => $tr_date,
                             'dt_modifield' => $txtDtModified,
                             'user_id' => $userid,
-                            'korda' => $txtKorda  
+                            'korda' => $txtOfficeID  
                         ]);
 
                     return response()->json(['response' => "Data sukses diperbaharui", 'img' => $insertPhoto]);
@@ -458,7 +455,7 @@ class MemberMgtController extends Controller
                             'dt_created' => $tr_date,
                             'dt_modifield' => $txtDtModified,
                             'user_id' => $userid, 
-                            'korda' => $txtKorda  
+                            'korda' => $txtOfficeID  
                         ]);
 
                     return response()->json(['response' => "Data sukses disimpan", 'img' => $insertPhoto]);
@@ -988,7 +985,7 @@ class MemberMgtController extends Controller
                         LTRIM(RTRIM(st_kartu)) as st_kartu,
                         LTRIM(RTRIM(st_pelatihan)) as st_pelatihan,
                         LTRIM(RTRIM(st_bnsp)) as st_bnsp,
-                        LTRIM(RTRIM(korda)) as korda")
+                        korda")
                         ->where('member_id', '=', $txtMemberID)
                         ->get();
 

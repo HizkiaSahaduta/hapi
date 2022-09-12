@@ -448,15 +448,17 @@ hr.style {
                                         </div>
 
                                         <div class="form-row mb-6">
+                                            <div class="form-group col-md-10 col-12">
+                                                <label class="text-dark" for="txtOfficeID">KORDA</label>
+                                                <select class="form-control basic" name="txtOfficeID" id="txtOfficeID">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row mb-6">
 
                                             <div class="form-group col-md-10">
-
-                                                <div class="n-chk">
-                                                    <label class="new-control new-checkbox checkbox-danger">
-                                                    <input type="checkbox" name="txtKorda" id="txtKorda" class="new-control-input" value="st_korda">
-                                                    <span class="new-control-indicator text-dark"></span>KORDA
-                                                    </label>
-                                                </div>
 
                                                 <div class="n-chk">
                                                     <label class="new-control new-checkbox checkbox-primary">
@@ -1289,7 +1291,7 @@ function listCityDom(params) {
                 $.each(data, function(index, element) {
                     $('select[name="txtCityDom"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
                 });
-                $('#txtCityDom').prop('disabled', true);
+                // $('#txtCityDom').prop('disabled', true);
 
             }
 
@@ -1300,7 +1302,7 @@ function listCityDom(params) {
                 $.each(data, function(index, element) {
                     $('select[name="txtCityDom"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
                 });
-                $('#txtCityDom').prop('disabled', false);
+                // $('#txtCityDom').prop('disabled', false);
             }
         }
     });
@@ -1637,6 +1639,98 @@ function listMemberTable(groupid) {
    
 }
 
+function listOffice(id){
+
+    if(!id) {
+
+        $.ajax({
+        type: "GET",
+        url: "{{ url('listOffice') }}",
+            success: function(data) {
+
+                count = Object.keys(data).length;
+
+                if (count < 2) {
+
+                    $('select[name="txtOfficeID"]').empty();
+                    $('select[name="txtOfficeID"]').prepend('<option></option>');
+                    $.each(data, function(index, element) {
+                        $('select[name="txtOfficeID"]').append('<option value="'+element.office_id+'" selected>'+element.office_name+'</option>');
+                    });
+                    $('#txtOfficeID').prop('disabled', true);
+
+                }
+
+                else {
+                    
+                    $('select[name="txtOfficeID"]').empty();
+                    $('select[name="txtOfficeID"]').prepend('<option></option>');
+                    $.each(data, function(index, element) {
+                        $('select[name="txtOfficeID"]').append('<option value="'+element.office_id+'">'+element.office_name+'</option>');
+                    });
+                    $('#txtOfficeID').prop('disabled', false);
+                }
+            }
+        });
+
+
+        $('#txtOfficeID').select2({
+            placeholder: 'Pilih KORDA',
+            allowClear: true
+        });
+    }
+
+    else {
+
+        $.ajax({
+        type: "GET",
+        url: "{{ url('listOffice') }}",
+            success: function(data) {
+
+                count = Object.keys(data).length;
+
+                if (count < 2) {
+
+                    $('select[name="txtOfficeID"]').empty();
+                    $('select[name="txtOfficeID"]').prepend('<option></option>');
+                    $.each(data, function(index, element) {
+                        $('select[name="txtOfficeID"]').append('<option value="'+element.office_id+'" selected>'+element.office_name+'</option>');
+                    });
+                    $('#txtOfficeID').prop('disabled', true);
+
+                }
+
+                else {
+                    
+                    $('select[name="txtOfficeID"]').empty();
+                    $('select[name="txtOfficeID"]').prepend('<option></option>');
+                    $.each(data, function(index, element) {
+                        if ( element.office_id == id ) {
+                            $('select[name="txtOfficeID"]').append('<option value="'+element.office_id+'" selected>'+element.office_name+'</option>');
+                        }
+                        else {
+                            $('select[name="txtOfficeID"]').append('<option value="'+element.office_id+'">'+element.office_name+'</option>');
+                        }
+                    });
+                    $('#txtOfficeID').prop('disabled', false);
+                }
+            }
+        });
+
+
+        $('#txtOfficeID').select2({
+            placeholder: 'Pilih Cabang',
+            allowClear: true
+        });
+
+
+    }
+
+
+
+
+}
+
 $(document).ready(function() {
 
     $('#homeNav').attr('data-active','false');
@@ -1656,7 +1750,7 @@ $(document).ready(function() {
 
     // listProv(); listProvDom(); listCity(); listCityDom(); 
     listGender(); listEducation(); listStatMember(); listIndustrial(); listPekerjaan(); listProvinsiDomisili(); listProvinsi();
-    listMemberTable(groupid); listqTipeAnggota(); listqProv(); listqKota(); listqStatus(); listqTrainee();
+    listMemberTable(groupid); listqTipeAnggota(); listqProv(); listqKota(); listqStatus(); listqTrainee(); listOffice();
 
     f1 = flatpickr(document.getElementById('txtDOB'), {
         altInput: true,
@@ -1866,6 +1960,7 @@ $(document).ready(function() {
         var txtCityDom = $('#txtCityDom').val();
         var txtGender = $('#txtGender').val();
         var txtJob = $('#txtJob').val();
+        var txtOfficeID = $('#txtOfficeID').val();
 
         if (!txtNoIDCard) {
             swal("Whoops", "No.Identitas harus diisi", "error")
@@ -2622,6 +2717,9 @@ $(document).ready(function() {
                         $("#txtIndustrial").val(element.position_id).trigger('change');
                         $('#txtIndustrialName').val(element.position_name);
 
+                        $("#txtOfficeID").val(element.korda).trigger('change');
+                        listOffice(element.korda);
+
                         if (element.st_kartu == 'Y') {
 
                             $("#txtStatKartu").prop("checked", true);
@@ -2653,17 +2751,6 @@ $(document).ready(function() {
                         else {
 
                             $("#txtStatCert").prop("checked", false);
-                        }
-
-                        if (element.korda == 'Y') {
-
-                            $("#txtKorda").prop("checked", true);
-
-                        }
-
-                        else {
-
-                            $("#txtKorda").prop("checked", false);
                         }
 
                         var drEvent2 = $('#txtKTP').dropify();
