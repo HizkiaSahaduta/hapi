@@ -286,6 +286,22 @@ hr.style {
                                         </div>
 
                                         <div class="form-row mb-6">
+
+                                            <div class="form-group col-md-10">
+                                                <label class="text-dark" for="txtDtCreated">Tanggal Bergabung</label>
+                                                <div class="input-group">
+                                                    <input type="text" name="txtDtCreated" id="txtDtCreated" class="form-control">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-success" id="DtCreatedDOB">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row mb-6">
                                             <div class="form-group col-md-6">
                                                 <label class="text-dark" for="txtNoIDCard">No. Identitas</label>
                                                 <input type="text" name="txtNoIDCard" id="txtNoIDCard" class="form-control" placeholder="KTP/SIM/Kartu Pelajar">
@@ -979,7 +995,7 @@ hr.style {
 <script>
 
 
-var setId, f1, f2, f3;
+var setId, f1, f2, f3, f4;
 var qTipeAnggota, qStatus, qTrainee, qProv, qKota, qMemberID, qNama, qStartDate, qEndDate;
 var groupid = '{{ Session::get('GROUPID') }}'
 
@@ -1775,6 +1791,13 @@ $(document).ready(function() {
         disableMobile: "true",
     });
 
+    f4 = flatpickr(document.getElementById('txtDtCreated'), {
+        altInput: true,
+        altFormat: "d-m-Y",
+        dateFormat: "Y-m-d",
+        disableMobile: "true",
+    });
+
     var btnAddMember = document.getElementById("btnAddMember");
     var btnBack = document.getElementById("btnBack");
     var divTableMember = document.getElementById("divTableMember");
@@ -1903,6 +1926,12 @@ $(document).ready(function() {
     $('#resetDOB').on('click', function() {
 
         f1.clear();
+
+    });
+
+    $('#DtCreatedDOB').on('click', function() {
+
+        f4.clear();
 
     });
 
@@ -2708,6 +2737,20 @@ $(document).ready(function() {
 
 
                         $('#txtDOB').val(element.date_birth);
+
+                        f4 = flatpickr(document.getElementById('txtDtCreated'), {
+                            altInput: true,
+                            altFormat: "d-m-Y",
+                            dateFormat: "Y-m-d",
+                            disableMobile: "true",
+                            defaultDate : element.dt_created
+                        });
+
+
+
+                        $('#txtDtCreated').val(element.dt_created);
+
+
                         $('#txtPhone').val(element.phone);
                         $('#txtEmail').val(element.email);
                         $("#txtEducation").val(element.last_educ).trigger('change');

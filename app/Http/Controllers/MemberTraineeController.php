@@ -93,7 +93,7 @@ class MemberTraineeController extends Controller
         }
 
         $result = DB::select(DB::raw("select LTRIM(RTRIM(a.trx_id)) as trx_id,
-        FORMAT(a.dt_trx, 'dd.MM.yyyy') as dt_trx,
+        FORMAT(a.dt_trx, 'yyyy.MM.dd') as dt_trx,
         LTRIM(RTRIM(b.office_name)) as office_name, 
         LTRIM(RTRIM(c.descr)) as descr_mst_training, 
         LTRIM(RTRIM(d.descr)) as descr_mst_training_type, 
@@ -104,8 +104,8 @@ class MemberTraineeController extends Controller
         LTRIM(RTRIM(a.city)) as city, 
         (select count(member_id) from event_dtl where trx_id = a.trx_id) as qty_member, 
         LTRIM(RTRIM(a.stat)) as stat, 
-        FORMAT(a.dt_created, 'dd MMM yyyy') as dt_created,
-        FORMAT(a.dt_modified, 'dd MMM yyyy') as dt_modified,
+        FORMAT(a.dt_created, 'yyyy.MM.dd') as dt_created,
+        FORMAT(a.dt_modified, 'yyyy.MM.dd') as dt_modified,
         LTRIM(RTRIM(a.user_id)) as user_id 
         from event_hdr a 
         inner join office b on a.office_id = b.office_id

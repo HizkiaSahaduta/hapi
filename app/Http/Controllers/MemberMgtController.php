@@ -150,7 +150,7 @@ class MemberMgtController extends Controller
                                     LTRIM(RTRIM(province1)) as province1, 
                                     LTRIM(RTRIM(city1)) as city1, 
                                     LTRIM(RTRIM(active_flag)) as active_flag, 
-                                    FORMAT(dt_created, 'dd.MM.yyyy') as dt_created,
+                                    FORMAT(dt_created, 'yyyy.MM.dd') as dt_created,
                                     st_pelatihan, st_bnsp
                                     from member $where order by 1"));
 
@@ -276,6 +276,10 @@ class MemberMgtController extends Controller
         if(!$txtDOB){
             $txtDOB = '1900-01-01 00:00:00';
         }
+        $txtDtCreated = $request->txtDtCreated;
+        if(!$txtDtCreated){
+            $txtDtCreated = '1900-01-01 00:00:00';
+        }
         $txtPhone = $request->txtPhone;
         if(!$txtPhone){
             $txtPhone = '';
@@ -397,7 +401,7 @@ class MemberMgtController extends Controller
                             'st_kartu' => $txtStatKartu,
                             'st_pelatihan' => $txtStatTrainee,
                             'st_bnsp' => $txtStatCert,
-                            'dt_created' => $tr_date,
+                            'dt_created' => $txtDtCreated,
                             'dt_modifield' => $txtDtModified,
                             'user_id' => $userid,
                             'korda' => $txtOfficeID  
@@ -452,7 +456,7 @@ class MemberMgtController extends Controller
                             'st_kartu' => $txtStatKartu,
                             'st_pelatihan' => $txtStatTrainee,
                             'st_bnsp' => $txtStatCert,
-                            'dt_created' => $tr_date,
+                            'dt_created' => $txtDtCreated,
                             'dt_modifield' => $txtDtModified,
                             'user_id' => $userid, 
                             'korda' => $txtOfficeID  
@@ -970,6 +974,7 @@ class MemberMgtController extends Controller
                         LTRIM(RTRIM(province1)) as province1,
                         LTRIM(RTRIM(birth_place)) as birth_place,
                         date_birth,
+                        dt_created,
                         LTRIM(RTRIM(sex)) as sex,
                         LTRIM(RTRIM(phone)) as phone,
                         LTRIM(RTRIM(email)) as email,
