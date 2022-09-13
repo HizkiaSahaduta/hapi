@@ -123,6 +123,10 @@ Route::post('listDtlTraineePeriodic', 'HomeController@listDtlTraineePeriodic')->
 Route::post('chartDtlTraineePeriodic', 'HomeController@chartDtlTraineePeriodic')->name('chartDtlTraineePeriodic');
 Route::post('chartCityPerProv', 'HomeController@chartCityPerProv')->name('chartCityPerProv');
 
+Route::post('getListAnggotaKorda', 'HomeController@getListAnggotaKorda')->name('getListAnggotaKorda');
+Route::post('getListAnggotaKordaTersertifikasi', 'HomeController@getListAnggotaKordaTersertifikasi')->name('getListAnggotaKordaTersertifikasi');
+
+
 
 //-- Master Pekerjaan
 Route::get('MasterPekerjaan', 'MasterPekerjaanController@index')->name('MasterPekerjaan');

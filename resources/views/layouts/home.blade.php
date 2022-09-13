@@ -8,8 +8,16 @@
 <link href="{{ asset('outside/assets/css/elements/infobox.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('outside/plugins/notification/snackbar/snackbar.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('outside/assets/css/components/custom-modal.css') }}" rel="stylesheet" type="text/css" />
-<style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@latest/dist/plugins/monthSelect/style.css">
+<link href="{{ asset('outside/plugins/flatpickr/flatpickr.css') }}" rel="stylesheet" type="text/css">
 
+<style>
+.flatpickr-input[readonly] {
+    cursor: pointer;
+    background-color: transparent !important;
+    max-width: 125px;
+    float: right;
+}
 .widget-content-area {
   box-shadow: none !important; }
 
@@ -216,6 +224,47 @@ h6 {
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row mt-2">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="d-flex">
+                                <h4 class="mr-auto">Total Anggota Penuh & Afiliasi HAPI (KORDA)</h4>
+                                <input id="start" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Period" style="max-width: 125px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+
+                    <div id="chartContainerKorda" style="height: 370px; width: 100%;"></div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row mt-2">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="d-flex">
+                                <input id="period_sertificate" class="form-control flatpickr flatpickr-input active " type="text" placeholder="Period" style="max-width: 125px;">
+                                <h4 class="ml-auto">Total Anggota Tersertifikasi (KORDA)</h4>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+
+                    <div id="chartContainerKordaSertifikasi" style="height: 370px; width: 100%;"></div>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -362,6 +411,8 @@ h6 {
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.4/js/dataTables.responsive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.10/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@latest/dist/plugins/monthSelect/index.js"></script>
 <script src="{{ asset('outside/plugins/notification/snackbar/snackbar.min.js') }}"></script>
 <script src="{{ asset('outside/plugins/blockui/jquery.blockUI.min.js') }}"></script>
 <script src="{{ asset('canvasjs.min.js') }}"></script>
@@ -508,6 +559,71 @@ function getPieChart(title, label, dp, container){
         pie_chart.render();
     }
     pie_chart.render();
+}
+
+function getChartStacked(title, label, dp, dp_penuh, container){
+    console.log(dp, dp_penuh);
+    var chart = new CanvasJS.Chart(container, 
+                {
+                    animationEnabled: true,
+                    title: {
+                        text: title
+                    },
+                    subtitles:[
+                        {
+                            text: label,
+                            fontFamily: "Calibri",
+                            fontColor: "red",
+                            fontSize: 12
+                        }
+                    ],
+                    axisX: {
+                        title : "KORDA",
+                        includeZero: false
+                    },
+                    axisY: {
+                        title : "(Total)",
+                    },
+                    exportEnabled: true,
+                    toolTip: {
+                        shared: true,
+                        content: toolTipContent,
+                        enabled: true
+                    },
+                    data: [
+                        {        
+                            type: "stackedColumn",
+                            showInLegend: true,
+                            name: "Penuh",
+                            color: "#ff2e17",
+                            dataPoints: dp
+                        },
+                        {
+                            type: "stackedColumn",
+                            showInLegend: true,
+                            color: "#1b3098",
+                            name: "Afiliasi",
+                            dataPoints: dp_penuh
+                        },
+                    ]
+                });
+    chart.render();
+}
+
+function toolTipContent(e) {
+    var str = "";
+	var total = 0;
+	var str2, str3;
+	for (var i = 0; i < e.entries.length; i++){
+		var  str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\"> "+e.entries[i].dataSeries.name+"</span>: <strong>"+e.entries[i].dataPoint.y+"</strong><br/>";
+		total = e.entries[i].dataPoint.y + total;
+		str = str.concat(str1);
+	}
+	// str2 = "<span style = \"color:DodgerBlue;\"><strong>"+(e.entries[0].dataPoint.x)+"</strong></span><br/>";
+    str2 = "<span></span>"
+	total = Math.round(total * 100) / 100;
+	str3 = "<span style = \"color:Tomato\">Total:</span><strong>"+total+"</strong><br/>";
+	return (str2.concat(str)).concat(str3);
 }
 
 function getChart1(title, label, dp, type, container, click){
@@ -804,6 +920,152 @@ function initDashboard() {
         $.unblockUI();
         
         
+        }
+    });
+}
+
+function getListAnggotaKorda(period) {
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('getListAnggotaKorda') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            period: period
+        },
+        success: function(data) {
+            // console.log(data);
+
+            var dp = [];
+            var dp_penuh = [];
+            var offices = [];
+
+            if (data['penuh'].length > 0) { 
+
+                for (var i = 0; i < data['penuh'].length; i++) {
+
+                    var name;
+
+                    if (data['penuh'][i].office_name == null) {
+                        name = 'N/A'
+                    } else{
+                        name = data['penuh'][i].office_name
+                        offices.push({ name: name, index: i});
+                        dp.push({ label: name, y: parseFloat(data['penuh'][i].total_anggota) });
+                    }
+
+                }
+            }
+
+            else if (data['penuh'].length < 1 ) {
+
+                dp.push({ y: 0 });
+
+            }
+
+            if (data['afiliasi'].length > 0) { 
+
+                for (let index = 0; index < offices.length; index++) {
+                    const office = offices[index];
+                    for (var i = 0; i < data['afiliasi'].length; i++) {
+                        var name;
+
+                        if (data['afiliasi'][i].office_name == null) {
+                            name = 'N/A'
+                        } else{
+                            name = data['afiliasi'][i].office_name
+
+                            if (office.name === name) {
+                                dp_penuh.push({ label: name, y: parseFloat(data['afiliasi'][i].total_anggota) });
+                                dp.splice(index, 1);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            else if (data['afiliasi'].length < 1 ) {
+
+                dp_penuh.push({ y: 0 });
+
+            }
+
+            getChartStacked('', 'Total Anggota Penuh & Afiliasi HAPI (KORDA)', dp, dp_penuh, 'chartContainerKorda')
+
+        }
+    });
+}
+
+function getListAnggotaKordaSertifikasi(period) {
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('getListAnggotaKordaTersertifikasi') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            period: period
+        },
+        success: function(data) {
+            // console.log(data);
+
+            var dp = [];
+            var dp_penuh = [];
+            var offices = [];
+
+            if (data['penuh'].length > 0) { 
+
+                for (var i = 0; i < data['penuh'].length; i++) {
+
+                    var name;
+
+                    if (data['penuh'][i].city == null) {
+                        name = 'N/A'
+                    } else{
+                        name = data['penuh'][i].city
+                        offices.push(name);
+                        dp.push({ label: name, y: parseFloat(data['penuh'][i].total_anggota) });
+                    }
+
+                }
+            }
+
+            else if (data['penuh'].length < 1 ) {
+
+                dp.push({ y: 0 });
+
+            }
+
+            if (data['afiliasi'].length > 0) { 
+
+                for (let index = 0; index < offices.length; index++) {
+                    const office = offices[index];
+                    for (var i = 0; i < data['afiliasi'].length; i++) {
+                        var name;
+
+                        if (data['afiliasi'][i].city == null) {
+                            name = 'N/A'
+                        } else{
+                            name = data['afiliasi'][i].city
+
+                            if (office === name) {
+                                dp_penuh.push({ label: name, y: parseFloat(data['afiliasi'][i].total_anggota) });
+                                dp.splice(index, 1);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            else if (data['afiliasi'].length < 1 ) {
+
+                dp_penuh.push({ y: 0 });
+
+            }
+
+            getChartStacked('', 'Total Anggota Tersertifikasi (KORDA)', dp, dp_penuh, 'chartContainerKordaSertifikasi')
+
         }
     });
 }
@@ -1342,6 +1604,33 @@ $(document).ready(function() {
 
     
     initDashboard();
+    getListAnggotaKorda();
+    getListAnggotaKordaSertifikasi();
+
+    var f1 = flatpickr(document.getElementById('start'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });
+
+    var f2 = flatpickr(document.getElementById('period_sertificate'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });
+
+    $( "#start" ).change(function() {
+        var period = $('#start').val()
+        getListAnggotaKorda(period)
+    });
+    
+
+    $( "#period_sertificate" ).change(function() {
+        var period = $('#period_sertificate').val()
+        getListAnggotaKordaSertifikasi(period)
+    });
 
 });
 
