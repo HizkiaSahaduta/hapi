@@ -83,6 +83,7 @@ Route::post('editTraining', 'MstTrainingController@editTraining')->name('editTra
 //-- JSON Member
 Route::get('listIndustrial', 'JSONController@listIndustrial');
 Route::get('getMemberID', 'JSONController@getMemberID');
+Route::get('getPekerjaanID', 'JSONController@getPekerjaanID');
 Route::get('getTrainingID', 'JSONController@getTrainingID');
 Route::get('listqProvKTP', 'JSONController@listqProvKTP');
 Route::get('listqProvDom', 'JSONController@listqProvDom');
@@ -121,6 +122,13 @@ Route::post('listTraineePeriodic', 'HomeController@listTraineePeriodic')->name('
 Route::post('listDtlTraineePeriodic', 'HomeController@listDtlTraineePeriodic')->name('listDtlTraineePeriodic');
 Route::post('chartDtlTraineePeriodic', 'HomeController@chartDtlTraineePeriodic')->name('chartDtlTraineePeriodic');
 Route::post('chartCityPerProv', 'HomeController@chartCityPerProv')->name('chartCityPerProv');
+
+
+//-- Master Pekerjaan
+Route::get('MasterPekerjaan', 'MasterPekerjaanController@index')->name('MasterPekerjaan');
+Route::post('listMasterPekerjaan', 'MasterPekerjaanController@listMasterPekerjaan')->name('listMasterPekerjaan');
+Route::post('saveDataPekerjaan', 'MasterPekerjaanController@saveDataPekerjaan')->name('saveDataPekerjaan');
+Route::post('getDetailPekerjaan', 'MasterPekerjaanController@getDetailPekerjaan')->name('getDetailPekerjaan');
 
 
 

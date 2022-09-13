@@ -38,6 +38,19 @@ class JSONController extends Controller
 
     }
 
+    public function getPekerjaanID(){
+
+        $id = DB::table('pekerjaan')
+                    ->selectRaw('max(RIGHT(RTRIM(id), 1)) + 1 as id')
+                    ->value('id');
+
+        $id = str_pad($id, 3, '0', STR_PAD_LEFT);
+
+        return response()->json(['id' => $id]);
+
+
+    }
+
     public function getTrainingID(){
 
         $train_id = DB::table('mst_training')
