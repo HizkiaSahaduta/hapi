@@ -134,6 +134,13 @@ Route::post('listMasterPekerjaan', 'MasterPekerjaanController@listMasterPekerjaa
 Route::post('saveDataPekerjaan', 'MasterPekerjaanController@saveDataPekerjaan')->name('saveDataPekerjaan');
 Route::post('getDetailPekerjaan', 'MasterPekerjaanController@getDetailPekerjaan')->name('getDetailPekerjaan');
 
+Route::get('MasterOffice', 'MasterOfficeController@index')->name('MasterOffice');
+Route::post('listMasterOffice', 'MasterOfficeController@listMasterOffice')->name('listMasterOffice');
+Route::post('saveDataOffice', 'MasterOfficeController@saveDataOffice')->name('saveDataOffice');
+Route::post('getDetailOffice', 'MasterOfficeController@getDetailOffice')->name('getDetailOffice');
+
+
+
 
 
 

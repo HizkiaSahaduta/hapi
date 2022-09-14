@@ -33,6 +33,12 @@
                                 <a href="{{ route('MasterPekerjaan') }}">Pekerjaan</a>
                             </li>
                             @endif
+
+                            @if(session()->has('mnuMasterOffice'))
+                            <li id='MasterOffice'>
+                                <a href="{{ route('MasterOffice') }}">Office</a>
+                            </li>
+                            @endif
                         </ul>
                     </li>
 

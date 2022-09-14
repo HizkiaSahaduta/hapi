@@ -107,7 +107,7 @@ hr.style {
                     <nav class="breadcrumb-one" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Master</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a href="{{ url('MasterPekerjaan') }}">Pekerjaan</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="{{ url('MasterOffice') }}">Office</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -155,14 +155,14 @@ hr.style {
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Master Pekerjaan</h4>
+                            <h4>Master Office</h4>
                         </div>
                     </div>
                 </div>
                 <div class="widget-content-area">
                     <a href="javascript:void(0)" class="btn btn-dark mb-2" id="btnAddMaster">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Tambah Master Pekerjaan
+                        Tambah Master Office
                     </a>
 
                     <a href="javascript:void(0)" class="btn btn-dark mb-2" id="btnBack" style="display: none">
@@ -175,8 +175,14 @@ hr.style {
                             <thead>
                                 <tr>
                                     <th>Mill ID</th>
-                                    <th>ID Pekerjaan</th>
-                                    <th>Pekerjaan</th>
+                                    <th>ID Office</th>
+                                    <th>Office</th>
+                                    <th>Address</th>
+                                    <th>Provinsi</th>
+                                    <th>City</th>
+                                    <th>Phone</th>
+                                    <th>Fax</th>
+                                    <th>Email</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -188,20 +194,65 @@ hr.style {
                             <div class="col-lg-3 layout-spacing layout-spacing">
                                 <div class="form-row mb-6">
                                     <div class="form-group col-md-12">
-                                        <label class="text-dark" for="txtMemberID">ID Pekerjaan</label>
-                                        <input type="text" name="txtMemberID" id="txtMemberID" class="form-control" readonly>
+                                        <label class="text-dark" for="txtName">Office</label>
+                                        <input type="text" name="txtName" id="txtName" class="form-control" placeholder="Contoh: Mojokerto">
+                                        <input type="text" name="txtOfficeID" id="txtOfficeID" class="form-control" hidden>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 layout-spacing layout-spacing">
                                 <div class="form-row mb-6">
                                     <div class="form-group col-md-12">
-                                        <label class="text-dark" for="txtName">Pekerjaan</label>
-                                        <input type="text" name="txtName" id="txtName" class="form-control" placeholder="Contoh: Swasta">
+                                        <label class="text-dark" for="txtPhone">Phone</label>
+                                        <input type="text" name="txtPhone" id="txtPhone" class="form-control" placeholder="Contoh: 0813324656225">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 layout-spacing layout-spacing">
+                                <div class="form-row mb-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="text-dark" for="txtFax">Fax</label>
+                                        <input type="text" name="txtFax" id="txtFax" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 layout-spacing layout-spacing">
+                                <div class="form-row mb-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="text-dark" for="txtEmail">Email</label>
+                                        <input type="email" name="txtEmail" id="txtEmail" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 layout-spacing layout-spacing">
+                                <div class="form-row mb-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="text-dark" for="txtProv">Provinsi</label>
+                                        <select class="form-control basic" name="txtProvText" id="txtProvText">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 layout-spacing layout-spacing">
+                                <div class="form-row mb-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="text-dark" for="txtCity">Kota/Kab.</label>
+                                        <input type="text" name="txtCity" id="txtCity" class="form-control" placeholder="Kota">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 layout-spacing layout-spacing">
+                                <div class="form-row mb-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="text-dark" for="txtAddress">Address</label>
+                                        <input type="text" name="txtAddress" id="txtAddress" class="form-control" placeholder="Contoh: Mojokerto">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 layout-spacing layout-spacing">
                                 <div class="form-row mb-6">
                                     <div class="form-group col-md-12">
                                         <label class="text-dark" for="txtStatus">Status</label>
@@ -311,7 +362,7 @@ $(block).block({
 
 }
 
-function listMasterPekerjaan() {
+function listMasterOffice() {
     blockUI();
 
     var dataTable = $('#MasterTable').DataTable({
@@ -332,7 +383,7 @@ function listMasterPekerjaan() {
         serverSide: true,
         autoWidth: false,
         ajax: {
-            'url':'{!!url("listMasterPekerjaan")!!}',
+            'url':'{!!url("listMasterOffice")!!}',
             'type': 'post',
             data: {
                 '_token': '{{ csrf_token() }}',
@@ -341,8 +392,14 @@ function listMasterPekerjaan() {
         },
         columns: [
             {data: 'mill_id', name: 'mill_id'},
-            {data: 'id', name: 'id'},
-            {data: 'pekerjaan', name: 'pekerjaan'},
+            {data: 'office_id', name: 'office_id'},
+            {data: 'office_name', name: 'office_name'},
+            {data: 'address', name: 'address'},
+            {data: 'provinsi', name: 'provinsi'},
+            {data: 'city', name: 'city'},
+            {data: 'phone', name: 'phone'},
+            {data: 'fax', name: 'fax'},
+            {data: 'email', name: 'email'},
             {data: 'active_flag', name: 'active_flag'},
             {data: 'Detail', name: 'Detail',orderable:false,searchable:false}
         ],
@@ -376,15 +433,56 @@ function getPekerjaanID(){
 
 }
 
+function listProvinsi(){
+
+    $.ajax({
+        type: "GET",
+        url: "{{ url('listMasterProvinsi') }}",
+        success: function(data) {
+
+            count = Object.keys(data).length;
+
+            if (count < 2) {
+
+                $('select[name="txtProvText"]').empty();
+                $('select[name="txtProvText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvText"]').append('<option value="'+element.id+'" selected>'+element.nama+'</option>');
+                });
+                $('#txtProvText').prop('disabled', true);
+
+            }
+
+            else {
+                
+                $('select[name="txtProvText"]').empty();
+                $('select[name="txtProvText"]').prepend('<option></option>');
+                $.each(data, function(index, element) {
+                    $('select[name="txtProvText"]').append('<option value="'+element.id+'">'+element.nama+'</option>');
+                });
+                $('#txtProvText').prop('disabled', false);
+            }
+        }
+    });
+
+
+    $('#txtProvText').select2({
+        placeholder: 'Pilih Provinsi',
+        allowClear: true
+    });
+
+
+}
+
 $(document).ready(function() {
     $('#homeNav').attr('data-active','false');
     $('#homeNav').attr('aria-expanded','false');
     $('#MasterNav').attr('data-active','true');
     $('#MasterNav').attr('aria-expanded','true');
     $('.MasterTreeView').addClass('show');
-    $('#MasterPekerjaan').addClass('active');
+    $('#MasterOffice').addClass('active');
 
-    listMasterPekerjaan();getPekerjaanID();
+    listMasterOffice();getPekerjaanID();listProvinsi();
 
     var divTableMember = document.getElementById("divTableMember");
 
@@ -398,6 +496,16 @@ $(document).ready(function() {
         divTableMember.style.display = "none";
         masterForm.style.display = "block";
 
+        $('#txtOfficeID').val('');
+        $('#txtName').val('');
+        $('#txtPhone').val('');
+        $('#txtFax').val('');
+        $('#txtEmail').val('');
+        $('#txtStatus').val('');
+        $('#txtProvText').val('').trigger('change');
+        $('#txtCity').val('');
+        $('#txtAddress').val('');
+
     });
 
     $('#btnBack').on('click', function() {
@@ -410,30 +518,39 @@ $(document).ready(function() {
         divTableMember.style.display = "block";
         masterForm.style.display = "none";
 
-        listMasterPekerjaan();
+        listMasterOffice();
 
     });
 
     $('body').on('click', '.editMember', function(e) {
         blockUI();
 
-        var txtMemberID = $(this).data('id');
+        var txtOfficeID = $(this).data('id');
 
-        setId = txtMemberID;
+        setId = txtOfficeID;
 
         $.ajax({
             type: "POST",
-            url: "{{ url('getDetailPekerjaan') }}",
+            url: "{{ url('getDetailOffice') }}",
             data: {
                 '_token': '{{ csrf_token() }}',
-                'txtMemberID': txtMemberID
+                'txtOfficeID': txtOfficeID
             },
             success: function(data) {
                 console.log(data);
 
-                $('#txtMemberID').val(data.id);
-                $('#txtName').val(data.pekerjaan);
+                $('#txtOfficeID').val(data.office_id);
+                $('#txtName').val(data.office_name);
+                $('#txtPhone').val(data.phone);
+                $('#txtFax').val(data.fax);
+                $('#txtEmail').val(data.email);
                 $('#txtStatus').val(data.active_flag);
+                $('#txtProvText').val(data.id_provinsi).trigger('change');
+                $('#txtCity').val(data.city);
+                $('#txtAddress').val(data.address);
+
+                // $('#txtName').val(data.pekerjaan);
+                // $('#txtStatus').val(data.active_flag);
 
                 $("#btnBack").show();
                 $("#btnAddMaster").hide();
@@ -447,24 +564,45 @@ $(document).ready(function() {
     });
 
     $('#btnSave').on('click', function() {
-        txtMemberID = $('#txtMemberID').val();
+        txtOfficeID = $('#txtOfficeID').val();
         txtName = $('#txtName').val();
+        txtPhone = $('#txtPhone').val();
+        txtFax = $('#txtFax').val();
+        txtEmail = $('#txtEmail').val();
         txtStatus = $('#txtStatus').val();
-
+        txtProvText = $('#txtProvText').val();
+        txtCity = $('#txtCity').val();
+        txtAddress = $('#txtAddress').val();
+        
         if (!txtName) {
-            swal("Whoops", "Pekerjaan harus diisi", "error")
+            swal("Whoops", "Office harus diisi", "error")
         }
         if (!txtStatus) {
-            swal("Whoops", "Status Pekerjaan harus diisi", "error")
+            swal("Whoops", "Status harus diisi", "error")
+        }
+        if (!txtProvText) {
+            swal("Whoops", "Provinsi harus diisi", "error")
+        }
+        if (!txtCity) {
+            swal("Whoops", "Kota harus diisi", "error")
+        }
+        if (!txtAddress) {
+            swal("Whoops", "Alamat harus diisi", "error")
         }
 
         $.ajax({
             type: "POST",
-            url: "{{ url('saveDataPekerjaan') }}",
+            url: "{{ url('saveDataOffice') }}",
             data: {
                 '_token': '{{ csrf_token() }}',
-                'txtMemberID': txtMemberID,
+                'txtOfficeID': txtOfficeID,
+                'txtPhone': txtPhone,
                 'txtName': txtName,
+                'txtFax': txtFax,
+                'txtEmail': txtEmail,
+                'txtProvText': txtProvText,
+                'txtCity': txtCity,
+                'txtAddress': txtAddress,
                 'txtStatus': txtStatus
             },
             success: function(data) {
