@@ -317,34 +317,19 @@ class HomeController extends Controller
     {
         $period = $request->period ? $request->period : Carbon::now()->format('Ym');
 
-        $penuh = DB::select(DB::raw("SELECT
-                        view_total_anggota_by_korda.st_anggota, 
+        $datas = DB::select(DB::raw("SELECT
+                        LTRIM(RTRIM(view_total_anggota_by_korda.st_anggota)) as st_anggota, 
                         LTRIM(RTRIM(view_total_anggota_by_korda.office_name)) as office_name,
                         SUM(view_total_anggota_by_korda.total_anggota) AS total_anggota
                     FROM
                         view_total_anggota_by_korda
                     WHERE 
-                        view_total_anggota_by_korda.periode <= $period AND view_total_anggota_by_korda.st_anggota = 'Anggota Penuh'
+                        view_total_anggota_by_korda.periode <= $period and view_total_anggota_by_korda.st_anggota != '' and view_total_anggota_by_korda.office_name != ''
                     GROUP BY
                         view_total_anggota_by_korda.st_anggota, 
                         view_total_anggota_by_korda.office_name"));
         
-        $afiliasi = DB::select(DB::raw("SELECT
-                        view_total_anggota_by_korda.st_anggota, 
-                        LTRIM(RTRIM(view_total_anggota_by_korda.office_name)) as office_name,
-                        SUM(view_total_anggota_by_korda.total_anggota) AS total_anggota
-                    FROM
-                        view_total_anggota_by_korda
-                    WHERE 
-                        view_total_anggota_by_korda.periode <= $period AND view_total_anggota_by_korda.st_anggota = 'Anggota Afiliasi'
-                    GROUP BY
-                        view_total_anggota_by_korda.st_anggota, 
-                        view_total_anggota_by_korda.office_name"));
-
-        
-        $data = ['penuh' => $penuh,
-            'afiliasi' => $afiliasi
-        ];
+        $data = ['datas' => $datas];
 
         return response()->json($data);
     }
@@ -353,34 +338,19 @@ class HomeController extends Controller
     {
         $period = $request->period ? $request->period : Carbon::now()->format('Ym');
 
-        $penuh = DB::select(DB::raw("SELECT
-                        view_total_anggota_sertifikasi_korda.st_anggota,
-                        view_total_anggota_sertifikasi_korda.city,
+        $datas = DB::select(DB::raw("SELECT
+                        LTRIM(RTRIM(view_total_anggota_sertifikasi_korda.st_anggota)) as st_anggota,
+                        LTRIM(RTRIM(view_total_anggota_sertifikasi_korda.city)) as city,
                         SUM ( view_total_anggota_sertifikasi_korda.total_anggota ) AS total_anggota 
                     FROM
                         view_total_anggota_sertifikasi_korda 
                     WHERE
-                        view_total_anggota_sertifikasi_korda.periode <= $period AND view_total_anggota_sertifikasi_korda.st_anggota = 'Anggota Penuh'
+                        view_total_anggota_sertifikasi_korda.periode <= $period AND view_total_anggota_sertifikasi_korda.st_anggota != '' AND view_total_anggota_sertifikasi_korda.city != ''
                     GROUP BY
                         view_total_anggota_sertifikasi_korda.st_anggota,
                         view_total_anggota_sertifikasi_korda.city"));
         
-        $afiliasi = DB::select(DB::raw("SELECT
-                        view_total_anggota_sertifikasi_korda.st_anggota,
-                        view_total_anggota_sertifikasi_korda.city,
-                        SUM ( view_total_anggota_sertifikasi_korda.total_anggota ) AS total_anggota 
-                    FROM
-                        view_total_anggota_sertifikasi_korda 
-                    WHERE
-                        view_total_anggota_sertifikasi_korda.periode <= $period AND view_total_anggota_sertifikasi_korda.st_anggota = 'Anggota Afiliasi'
-                    GROUP BY
-                        view_total_anggota_sertifikasi_korda.st_anggota,
-                        view_total_anggota_sertifikasi_korda.city"));
-
-        
-        $data = ['penuh' => $penuh,
-            'afiliasi' => $afiliasi
-        ];
+        $data = ['datas' => $datas];
 
         return response()->json($data);
     }

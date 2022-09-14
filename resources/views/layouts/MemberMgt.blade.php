@@ -1764,7 +1764,7 @@ $(document).ready(function() {
 
     var block = $('#modalLoad');
 
-    // listProv(); listProvDom(); listCity(); listCityDom(); 
+    listCity(); listCityDom(); 
     listGender(); listEducation(); listStatMember(); listIndustrial(); listPekerjaan(); listProvinsiDomisili(); listProvinsi();
     listMemberTable(groupid); listqTipeAnggota(); listqProv(); listqKota(); listqStatus(); listqTrainee(); listOffice();
 
@@ -2718,6 +2718,7 @@ $(document).ready(function() {
                         $('#txtAddressDom').val(element.address1);
                         $('#txtProvDomText').val(element.province1).trigger('change');
                         $('#txtCityDom').val(element.city1).trigger('change');
+                        console.log($('#txtCityDom').val(), element.city1);
                         // $('#txtBirthplace').val(element.birth_place);
 
                         var dob =  element.date_birth

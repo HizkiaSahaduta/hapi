@@ -619,8 +619,8 @@ function toolTipContent(e) {
 		total = e.entries[i].dataPoint.y + total;
 		str = str.concat(str1);
 	}
-	// str2 = "<span style = \"color:DodgerBlue;\"><strong>"+(e.entries[0].dataPoint.x)+"</strong></span><br/>";
-    str2 = "<span></span>"
+	str2 = "<span style = \"color:DodgerBlue;\"><strong>"+(e.entries[0].dataPoint.label)+"</strong></span><br/>";
+    // str2 = "<span>"+e.entries[i].dataSeries.label+"</span>";
 	total = Math.round(total * 100) / 100;
 	str3 = "<span style = \"color:Tomato\">Total:</span><strong>"+total+"</strong><br/>";
 	return (str2.concat(str)).concat(str3);
@@ -934,62 +934,50 @@ function getListAnggotaKorda(period) {
             period: period
         },
         success: function(data) {
-            // console.log(data);
+
+            // console.log(data.datas);
 
             var dp = [];
             var dp_penuh = [];
-            var offices = [];
 
-            if (data['penuh'].length > 0) { 
+            var office_penuh = [];
+            var office_afiliasi = [];
 
-                for (var i = 0; i < data['penuh'].length; i++) {
+            var name = ''
+            var st_anggota = ''
 
-                    var name;
+            for (var i = 0; i < data.datas.length; i++) {
+                
+                if (name == data.datas[i].office_name) {
+                    // console.log(data.datas[i].office_name, data.datas[i].st_anggota, i);
+                    var index = i - 1;
+                    // console.log(index);
+                    // console.log(dp[index]);
+                    // if (index !== -1) {
+                    dp[index] = {label: data.datas[i].office_name, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota};
+                    // }
+                    // console.log(dp[index]);
 
-                    if (data['penuh'][i].office_name == null) {
-                        name = 'N/A'
-                    } else{
-                        name = data['penuh'][i].office_name
-                        offices.push({ name: name, index: i});
-                        dp.push({ label: name, y: parseFloat(data['penuh'][i].total_anggota) });
+                } else {
+                    name = data.datas[i].office_name;
+                    st_anggota = data.datas[i].st_anggota;
+
+                    if (data.datas[i].st_anggota == 'Anggota Penuh') {
+                        dp.push({ label: data.datas[i].office_name, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota });
+                        dp_penuh.push({ label: data.datas[i].office_name, y: 0, st_anggota: 'Anggota Afiliasi' });
                     }
 
-                }
-            }
-
-            else if (data['penuh'].length < 1 ) {
-
-                dp.push({ y: 0 });
-
-            }
-
-            if (data['afiliasi'].length > 0) { 
-
-                for (let index = 0; index < offices.length; index++) {
-                    const office = offices[index];
-                    for (var i = 0; i < data['afiliasi'].length; i++) {
-                        var name;
-
-                        if (data['afiliasi'][i].office_name == null) {
-                            name = 'N/A'
-                        } else{
-                            name = data['afiliasi'][i].office_name
-
-                            if (office.name === name) {
-                                dp_penuh.push({ label: name, y: parseFloat(data['afiliasi'][i].total_anggota) });
-                                dp.splice(index, 1);
-                            }
-                        }
-
+                    if (data.datas[i].st_anggota == 'Anggota Afiliasi') {
+                        dp.push({ label: data.datas[i].office_name, y: 0, st_anggota: 'Anggota Penuh'});
+                        dp_penuh.push({ label: data.datas[i].office_name, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota });
                     }
                 }
+                
             }
 
-            else if (data['afiliasi'].length < 1 ) {
+            // merge = dp.concat(dp_penuh);
 
-                dp_penuh.push({ y: 0 });
-
-            }
+            // console.log(dp, dp_penuh);
 
             getChartStacked('', 'Total Anggota Penuh & Afiliasi HAPI (KORDA)', dp, dp_penuh, 'chartContainerKorda')
 
@@ -1007,61 +995,44 @@ function getListAnggotaKordaSertifikasi(period) {
             period: period
         },
         success: function(data) {
-            // console.log(data);
+            console.log(data.datas);
 
             var dp = [];
             var dp_penuh = [];
-            var offices = [];
 
-            if (data['penuh'].length > 0) { 
+            var office_penuh = [];
+            var office_afiliasi = [];
 
-                for (var i = 0; i < data['penuh'].length; i++) {
+            var name = ''
+            var st_anggota = ''
 
-                    var name;
+            for (var i = 0; i < data.datas.length; i++) {
+                
+                if (name == data.datas[i].city) {
+                    // console.log(data.datas[i].city, data.datas[i].st_anggota, i);
+                    var index = i - 1;
+                    // console.log(index);
+                    // console.log(dp[index]);
+                    // if (index !== -1) {
+                    dp[index] = {label: data.datas[i].city, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota};
+                    // }
+                    // console.log(dp[index]);
 
-                    if (data['penuh'][i].city == null) {
-                        name = 'N/A'
-                    } else{
-                        name = data['penuh'][i].city
-                        offices.push(name);
-                        dp.push({ label: name, y: parseFloat(data['penuh'][i].total_anggota) });
+                } else {
+                    name = data.datas[i].city;
+                    st_anggota = data.datas[i].st_anggota;
+
+                    if (data.datas[i].st_anggota == 'Anggota Penuh') {
+                        dp.push({ label: data.datas[i].city, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota });
+                        dp_penuh.push({ label: data.datas[i].city, y: 0, st_anggota: 'Anggota Afiliasi' });
                     }
 
-                }
-            }
-
-            else if (data['penuh'].length < 1 ) {
-
-                dp.push({ y: 0 });
-
-            }
-
-            if (data['afiliasi'].length > 0) { 
-
-                for (let index = 0; index < offices.length; index++) {
-                    const office = offices[index];
-                    for (var i = 0; i < data['afiliasi'].length; i++) {
-                        var name;
-
-                        if (data['afiliasi'][i].city == null) {
-                            name = 'N/A'
-                        } else{
-                            name = data['afiliasi'][i].city
-
-                            if (office === name) {
-                                dp_penuh.push({ label: name, y: parseFloat(data['afiliasi'][i].total_anggota) });
-                                dp.splice(index, 1);
-                            }
-                        }
-
+                    if (data.datas[i].st_anggota == 'Anggota Afiliasi') {
+                        dp.push({ label: data.datas[i].city, y: 0, st_anggota: 'Anggota Penuh'});
+                        dp_penuh.push({ label: data.datas[i].city, y: parseFloat(data.datas[i].total_anggota), st_anggota: data.datas[i].st_anggota });
                     }
                 }
-            }
-
-            else if (data['afiliasi'].length < 1 ) {
-
-                dp_penuh.push({ y: 0 });
-
+                
             }
 
             getChartStacked('', 'Total Anggota Tersertifikasi (KORDA)', dp, dp_penuh, 'chartContainerKordaSertifikasi')
