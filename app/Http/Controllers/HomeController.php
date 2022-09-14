@@ -356,6 +356,33 @@ class HomeController extends Controller
     }
 
 
+    public function listTop5AnggotaSertifikasi(Request $request)
+    {
+        $period = $request->period ? $request->period : Carbon::now()->format('Ym');
+
+        $datas = DB::select(DB::raw("SELECT top 5 	LTRIM(RTRIM(view_total_anggota_sertifikasi_korda.st_anggota)) as st_anggota, 	LTRIM(RTRIM(view_total_anggota_sertifikasi_korda.city)) as city, 	SUM ( view_total_anggota_sertifikasi_korda.total_anggota ) AS total_anggota  
+        FROM 	view_total_anggota_sertifikasi_korda  
+        WHERE 	view_total_anggota_sertifikasi_korda.periode <= $period AND view_total_anggota_sertifikasi_korda.st_anggota != '' AND view_total_anggota_sertifikasi_korda.city != '' 
+        GROUP BY view_total_anggota_sertifikasi_korda.st_anggota, 	view_total_anggota_sertifikasi_korda.city 
+        order by SUM ( view_total_anggota_sertifikasi_korda.total_anggota ) desc"));
+        
+        $data = ['datas' => $datas];
+
+        return response()->json($data);
+    }
+
+    public function listTop5AnggotaKorda(Request $request)
+    {
+        $period = $request->period ? $request->period : Carbon::now()->format('Ym');
+
+        $datas = DB::select(DB::raw("SELECT top 5 	view_total_anggota_by_korda.st_anggota, 	view_total_anggota_by_korda.office_name, 	SUM ( view_total_anggota_by_korda.total_anggota ) AS total_anggota  FROM 	view_total_anggota_by_korda  WHERE 	view_total_anggota_by_korda.periode <= $period AND view_total_anggota_by_korda.office_name != '' AND view_total_anggota_by_korda.st_anggota != ''  GROUP BY 	view_total_anggota_by_korda.st_anggota, 	view_total_anggota_by_korda.office_name order by  	SUM ( view_total_anggota_by_korda.total_anggota ) desc"));
+        
+        $data = ['datas' => $datas];
+
+        return response()->json($data);
+    }
+
+
 
     
    

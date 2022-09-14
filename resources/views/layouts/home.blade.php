@@ -265,6 +265,69 @@ h6 {
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row mt-2">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="d-flex">
+                                <h4 class="mr-auto">Top 5 Anggota (KORDA)</h4>
+                                <input id="period_top_korda" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Period" style="max-width: 125px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-sm">
+                          <thead>
+                            <tr>
+                              <th>Status Anggota</th>
+                              <th>Kota</th>
+                              <th class="text-center">Total Anggota</th>
+                            </tr>
+                          </thead>
+                          <tbody id="listTop5AnggotaKorda">
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row mt-2">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <div class="d-flex">
+                                <input id="period_top_sertificate" class="form-control flatpickr flatpickr-input active" type="text" placeholder="Period" style="max-width: 125px;">
+                                <h4 class="ml-auto">Top 5 Anggota tersertifikasi (KORDA)</h4>
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-sm">
+                          <thead>
+                            <tr>
+                              <th>Status Anggota</th>
+                              <th>Kota</th>
+                              <th class="text-center">Total Anggota</th>
+                            </tr>
+                          </thead>
+                          <tbody id="listTop5AnggotaSertifikasi">
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1041,6 +1104,74 @@ function getListAnggotaKordaSertifikasi(period) {
     });
 }
 
+function getlistTop5AnggotaSertifikasi(period) {
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('listTop5AnggotaSertifikasi') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            period: period
+        },
+        success: function(data) {
+            console.log(period);
+            if (period == undefined) {
+                var rows = '';
+                $.each(data.datas, function(index, item) {
+                    rows += '<tr><td>' + item.st_anggota + '</td><td>' + item.city + '</td><td class="text-center">' + item.total_anggota + '</td></tr>';
+                });
+                $('#listTop5AnggotaSertifikasi').html(rows);
+                
+            } else{
+                $('#listTop5AnggotaSertifikasi').html('');
+
+                var rows = '';
+                $.each(data.datas, function(index, item) {
+                    rows += '<tr><td>' + item.st_anggota + '</td><td>' + item.city + '</td><td class="text-center">' + item.total_anggota + '</td></tr>';
+                });
+                $('#listTop5AnggotaSertifikasi').html(rows);
+                
+            }
+            
+        }
+    });
+
+}
+
+function getlistTop5AnggotaKorda(period) {
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('listTop5AnggotaKorda') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            period: period
+        },
+        success: function(data) {
+            console.log(period);
+            if (period == undefined) {
+                var rows = '';
+                $.each(data.datas, function(index, item) {
+                    rows += '<tr><td>' + item.st_anggota + '</td><td>' + item.office_name + '</td><td class="text-center">' + item.total_anggota + '</td></tr>';
+                });
+                $('#listTop5AnggotaKorda').html(rows);
+                
+            } else{
+                $('#listTop5AnggotaKorda').html('');
+
+                var rows = '';
+                $.each(data.datas, function(index, item) {
+                    rows += '<tr><td>' + item.st_anggota + '</td><td>' + item.office_name + '</td><td class="text-center">' + item.total_anggota + '</td></tr>';
+                });
+                $('#listTop5AnggotaKorda').html(rows);
+                
+            }
+            
+        }
+    });
+
+}
+
 function onClick1(e){
 
     var param = e.dataPoint.label
@@ -1577,6 +1708,8 @@ $(document).ready(function() {
     initDashboard();
     getListAnggotaKorda();
     getListAnggotaKordaSertifikasi();
+    getlistTop5AnggotaSertifikasi();
+    getlistTop5AnggotaKorda();
 
     var f1 = flatpickr(document.getElementById('start'), {
         static: true,
@@ -1592,6 +1725,22 @@ $(document).ready(function() {
         disableMobile: "true",
     });
 
+    var f3 = flatpickr(document.getElementById('period_top_sertificate'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });
+
+    var f4 = flatpickr(document.getElementById('period_top_korda'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });
+
+    
+
     $( "#start" ).change(function() {
         var period = $('#start').val()
         getListAnggotaKorda(period)
@@ -1601,6 +1750,16 @@ $(document).ready(function() {
     $( "#period_sertificate" ).change(function() {
         var period = $('#period_sertificate').val()
         getListAnggotaKordaSertifikasi(period)
+    });
+
+    $( "#period_top_sertificate" ).change(function() {
+        var period = $('#period_top_sertificate').val()
+        getlistTop5AnggotaSertifikasi(period)
+    });
+
+    $( "#period_top_korda" ).change(function() {
+        var period = $('#period_top_korda').val()
+        getlistTop5AnggotaKorda(period)
     });
 
 });

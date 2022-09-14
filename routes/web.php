@@ -125,8 +125,8 @@ Route::post('chartCityPerProv', 'HomeController@chartCityPerProv')->name('chartC
 
 Route::post('getListAnggotaKorda', 'HomeController@getListAnggotaKorda')->name('getListAnggotaKorda');
 Route::post('getListAnggotaKordaTersertifikasi', 'HomeController@getListAnggotaKordaTersertifikasi')->name('getListAnggotaKordaTersertifikasi');
-
-
+Route::post('listTop5AnggotaSertifikasi', 'HomeController@listTop5AnggotaSertifikasi')->name('listTop5AnggotaSertifikasi');
+Route::post('listTop5AnggotaKorda', 'HomeController@listTop5AnggotaKorda')->name('listTop5AnggotaKorda');
 
 //-- Master Pekerjaan
 Route::get('MasterPekerjaan', 'MasterPekerjaanController@index')->name('MasterPekerjaan');
