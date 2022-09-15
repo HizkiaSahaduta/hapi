@@ -341,6 +341,8 @@ class MemberMgtController extends Controller
 
         try {
 
+            $city = $this->getCityID($txtCity);
+            $city_dom = $this->getCityID($txtCityDom);
 
             $checkID = DB::table('member')
                         ->where('member_id', '=', $txtMemberID)
@@ -380,8 +382,8 @@ class MemberMgtController extends Controller
                             'member_name' => $txtName,
                             'address' => $txtAddress,
                             'address1' => $txtAddressDom,
-                            'city' =>  $txtCity,
-                            'city1' => $txtCityDom,
+                            'city' =>  $city ? $city->nama : '',
+                            'city1' => $city_dom ? $city_dom->nama : '',
                             'province' => $txtProv,
                             'province1' => $txtProvDom,
                             'country' => $txtCountries,
@@ -435,8 +437,8 @@ class MemberMgtController extends Controller
                             'member_name' => $txtName,
                             'address' => $txtAddress,
                             'address1' => $txtAddressDom,
-                            'city' =>  $txtCity,
-                            'city1' => $txtCityDom,
+                            'city' =>  $city ? $city->nama : '',
+                            'city1' => $city_dom ? $city_dom->nama : '',
                             'province' => $txtProv,
                             'province1' => $txtProvDom,
                             'country' => $txtCountries,
@@ -992,9 +994,16 @@ class MemberMgtController extends Controller
                         LTRIM(RTRIM(st_bnsp)) as st_bnsp,
                         korda")
                         ->where('member_id', '=', $txtMemberID)
-                        ->get();
+                        ->first();
 
-            return response()->json($result);
+            $city = $result->city ? $this->getCity($result->city, $result->province) : '';
+            $city_dom = $result->city1 ? $this->getCity($result->city1, $result->province1) : '';
+            
+            return response()->json([
+                'data' => $result,
+                'city' => $city,
+                'city_dom' => $city_dom
+            ]);
         }
 
         catch(QueryException $ex){
@@ -1131,6 +1140,26 @@ class MemberMgtController extends Controller
     
         return Excel::download(new HapiMemberExport($qTipeAnggota, $qStatus, $qTrainee, $qProv, $qKota, $qMemberID, $qNama, $qStartDate, $qEndDate), 'MemberHAPIReport.xlsx');
         
+    }
+
+    public function getCity($city, $province)
+    {
+        $result = DB::table('kabupaten')
+                    ->where('nama', 'like', '%' . $city . '%')
+                    ->where('prov', 'like', '%' . $province . '%')
+                    ->first();
+
+        return $result;
+    }
+
+
+    public function getCityID($city)
+    {
+        $result = DB::table('kabupaten')
+                    ->where('id', '=', $city)
+                    ->first();
+
+        return $result;
     }
 
 

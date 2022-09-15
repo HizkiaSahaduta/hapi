@@ -335,7 +335,7 @@ hr.style {
                                             </div>
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtCity">Kota/Kab.<span style="font-size: 10px; font-style: italic;"> (KTP)</span></label>
-                                                <!-- <input type="text" name="txtCity" id="txtCity" class="form-control" placeholder="Kota sesuai KTP"> -->
+                                                <input type="text" name="txtCityText" id="txtCityText" class="form-control" placeholder="Kota sesuai KTP" hidden>
                                                 <div id="txtCity_loading">
                                                     <select class="form-control basic" name="txtCity" id="txtCity">
                                                         <option></option>
@@ -360,7 +360,7 @@ hr.style {
                                             </div>
                                             <div class="form-group col-md-5">
                                                 <label class="text-dark" for="txtCityDom">Kota/Kab.<span style="font-size: 10px; font-style: italic;"> (Dom)</span></label>
-                                                <!-- <input type="text" name="txtCityDom" id="txtCityDom" class="form-control" placeholder="Kota sesuai domisili"> -->
+                                                <input type="text" name="txtCityDomText" id="txtCityDomText" class="form-control" placeholder="Kota sesuai domisili" hidden>
                                                 <div id="txtCityDom_loading">
                                                     <select class="form-control basic" name="txtCityDom" id="txtCityDom">
                                                         <option></option>
@@ -1174,35 +1174,42 @@ function listPekerjaan(){
 
 }
 
-function listProvinsiDomisili(){
-
+function listProvinsiDomisili(params){
+    if (params == undefined) {
+        params = ''
+    }
     $.ajax({
         type: "GET",
-        url: "{{ url('listMasterProvinsi') }}",
+        url: "{{ url('listMasterProvinsi') }}"+"?provinsi_id=" + params,
         success: function(data) {
 
             count = Object.keys(data).length;
 
-            if (count < 2) {
+            // if (count < 2) {
 
-                $('select[name="txtProvDomText"]').empty();
-                $('select[name="txtProvDomText"]').prepend('<option></option>');
-                $.each(data, function(index, element) {
-                    $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
-                });
-                $('#txtProvDomText').prop('disabled', true);
+            //     $('select[name="txtProvDomText"]').empty();
+            //     $('select[name="txtProvDomText"]').prepend('<option></option>');
+            //     $.each(data, function(index, element) {
+            //         $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+            //     });
+            //     $('#txtProvDomText').prop('disabled', false);
 
-            }
+            // }
 
-            else {
+            // else {
                 
                 $('select[name="txtProvDomText"]').empty();
                 $('select[name="txtProvDomText"]').prepend('<option></option>');
                 $.each(data, function(index, element) {
-                    $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                    if (element.nama == params) {
+                        $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                    } else{
+                        $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                    }
+                    // $('select[name="txtProvDomText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
                 });
                 $('#txtProvDomText').prop('disabled', false);
-            }
+            // }
         }
     });
 
@@ -1215,8 +1222,10 @@ function listProvinsiDomisili(){
 
 }
 
-function listProvinsi(){
-
+function listProvinsi(params){
+    if (params == undefined) {
+        params = ''
+    }
     $.ajax({
         type: "GET",
         url: "{{ url('listMasterProvinsi') }}",
@@ -1224,26 +1233,30 @@ function listProvinsi(){
 
             count = Object.keys(data).length;
 
-            if (count < 2) {
+            // if (count < 2) {
 
-                $('select[name="txtProvText"]').empty();
-                $('select[name="txtProvText"]').prepend('<option></option>');
-                $.each(data, function(index, element) {
-                    $('select[name="txtProvText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
-                });
-                $('#txtProvText').prop('disabled', true);
+            //     $('select[name="txtProvText"]').empty();
+            //     $('select[name="txtProvText"]').prepend('<option></option>');
+            //     $.each(data, function(index, element) {
+            //         $('select[name="txtProvText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+            //     });
+            //     $('#txtProvText').prop('disabled', false);
 
-            }
+            // }
 
-            else {
+            // else {
                 
                 $('select[name="txtProvText"]').empty();
                 $('select[name="txtProvText"]').prepend('<option></option>');
                 $.each(data, function(index, element) {
-                    $('select[name="txtProvText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                    if (element.nama == params) {
+                        $('select[name="txtProvText"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                    } else{
+                        $('select[name="txtProvText"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                    }
                 });
                 $('#txtProvText').prop('disabled', false);
-            }
+            // }
         }
     });
 
@@ -1256,33 +1269,43 @@ function listProvinsi(){
 
 }
 
-function listCity(params) {
+function listCity(params, city) {
+    if (city == undefined) {
+        city = ''
+    }
     $.ajax({
         type: "GET",
         url: "{{ url('listMasterKota') }}" +"?provinsi_id=" + params,
         success: function(data) {
             count = Object.keys(data).length;
 
-            if (count < 2) {
+            // if (count < 2) {
 
-                $('select[name="txtCity"]').empty();
-                $('select[name="txtCity"]').prepend('<option></option>');
-                $.each(data, function(index, element) {
-                    $('select[name="txtCity"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
-                });
-                $('#txtCity').prop('disabled', true);
+            //     $('select[name="txtCity"]').empty();
+            //     $('select[name="txtCity"]').prepend('<option></option>');
+            //     $.each(data, function(index, element) {
+            //         $('select[name="txtCity"]').append('<option value="'+element.id+'" selected>'+element.nama+'</option>');
+            //         if (element.id != city) {
+            //             $('select[name="txtCity"]').append('<option value="'+element.id+'">'+element.nama+'</option>');
+            //         }
+            //     });
+            //     $('#txtCity').prop('disabled', false);
 
-            }
+            // }
 
-            else {
+            // else {
                 
                 $('select[name="txtCity"]').empty();
                 $('select[name="txtCity"]').prepend('<option></option>');
                 $.each(data, function(index, element) {
-                    $('select[name="txtCity"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
+                    if (element.id == city) {
+                        $('select[name="txtCity"]').append('<option value="'+element.id+'" selected>'+element.nama+'</option>');
+                    } else{
+                        $('select[name="txtCity"]').append('<option value="'+element.id+'">'+element.nama+'</option>');
+                    }
                 });
                 $('#txtCity').prop('disabled', false);
-            }
+            // }
         }
     });
 
@@ -1293,33 +1316,45 @@ function listCity(params) {
     });
 }
 
-function listCityDom(params) {
+function listCityDom(params, city) {
+    if (city == undefined) {
+        city = ''
+    }
     $.ajax({
         type: "GET",
         url: "{{ url('listMasterKota') }}" +"?provinsi_id=" + params,
         success: function(data) {
+            console.log(data);
             count = Object.keys(data).length;
+            console.log(count);
 
-            if (count < 2) {
+            // if (count < 2) {
+
+            //     $('select[name="txtCityDom"]').empty();
+            //     $('select[name="txtCityDom"]').prepend('<option></option>');
+            //     $.each(data, function(index, element) {
+            //         $('select[name="txtCityDom"]').append('<option value="'+element.id+'" selected>'+element.nama+'</option>');
+            //         if (element.id != city) {
+            //             $('select[name="txtCityDom"]').append('<option value="'+element.id+'">'+element.nama+'</option>');
+            //         }
+            //     });
+            //     $('#txtCityDom').prop('disabled', false);
+
+            // }
+
+            // else {
 
                 $('select[name="txtCityDom"]').empty();
                 $('select[name="txtCityDom"]').prepend('<option></option>');
                 $.each(data, function(index, element) {
-                    $('select[name="txtCityDom"]').append('<option value="'+element.nama+'" selected>'+element.nama+'</option>');
+                    if (element.id == city) {
+                        $('select[name="txtCityDom"]').append('<option value="'+element.id+'" selected>'+element.nama+'</option>');
+                    } else{
+                        $('select[name="txtCityDom"]').append('<option value="'+element.id+'">'+element.nama+'</option>');
+                    }
                 });
-                // $('#txtCityDom').prop('disabled', true);
-
-            }
-
-            else {
-                
-                $('select[name="txtCityDom"]').empty();
-                $('select[name="txtCityDom"]').prepend('<option></option>');
-                $.each(data, function(index, element) {
-                    $('select[name="txtCityDom"]').append('<option value="'+element.nama+'">'+element.nama+'</option>');
-                });
-                // $('#txtCityDom').prop('disabled', false);
-            }
+                $('#txtCityDom').prop('disabled', false);
+            // }
         }
     });
 
@@ -1821,6 +1856,8 @@ $(document).ready(function() {
         setEmpty1();
         getMemberID();
 
+        listProvinsiDomisili(); listProvinsi(); listCity(); listCityDom(); listPekerjaan();listOffice();
+
         $("#btnBack").show();
         $("#btnAddMember").hide();
         $("#btnFilter").hide();
@@ -1860,19 +1897,19 @@ $(document).ready(function() {
         if (id) {
             blockElement(block);
 
-            listCity(id);
+            listCity(id, $('#txtCityText').val());
 
             setInterval(() => {
                 $(block).unblock();
             }, 1000);
         }
-        else {
-            listCity();
+        // else {
+        //     listCity();
 
-            setInterval(() => {
-                $(block).unblock();
-            }, 1000);
-        }
+        //     setInterval(() => {
+        //         $(block).unblock();
+        //     }, 1000);
+        // }
  
     });
 
@@ -1903,24 +1940,22 @@ $(document).ready(function() {
         var id = $("#txtProvDomText").val();
         var block = $('#txtCityDom_loading'); 
 
-        console.log(id);
-
         if (id) {
             blockElement(block);
 
-            listCityDom(id);
+            listCityDom(id, $('#txtCityDomText').val());
 
             setInterval(() => {
                 $(block).unblock();
             }, 1000);
         }
-        else {
-            listCityDom();
+        // else {
+        //     listCityDom();
 
-            setInterval(() => {
-                $(block).unblock();
-            }, 1000);
-        }
+        //     setInterval(() => {
+        //         $(block).unblock();
+        //     }, 1000);
+        // }
     });
 
     $('#resetDOB').on('click', function() {
@@ -2688,167 +2723,155 @@ $(document).ready(function() {
                 'txtMemberID': txtMemberID
             },
             success: function(data) {
+                console.log(data);
 
-                if (data.length > 0) {
+                    var drEvent1 = $('#txtPhoto').dropify();
+                    drEvent1 = drEvent1.data('dropify');
+                    drEvent1.resetPreview();
+                    drEvent1.clearElement();
+                    drEvent1.settings.defaultFile = data.data.pic_url;
+                    drEvent1.destroy();
+                    drEvent1.init();
+                    $('.dropify#txtPhoto').dropify({
+                    defaultFile: data.data.pic_url,
+                    });
 
-                    $.each(data, function(index, element) {
+                    
 
-                        var drEvent1 = $('#txtPhoto').dropify();
-                        drEvent1 = drEvent1.data('dropify');
-                        drEvent1.resetPreview();
-                        drEvent1.clearElement();
-                        drEvent1.settings.defaultFile = element.pic_url;
-                        drEvent1.destroy();
-                        drEvent1.init();
-                        $('.dropify#txtPhoto').dropify({
-                        defaultFile: element.pic_url,
-                        });
+                    $('#UserPhotoSrc').val(data.data.pic_url);
+                    $('#txtMemberID').val(data.data.member_id);
+                    $("#txtGender").val(data.data.sex).trigger('change');
+                    $('#txtName').val(data.data.member_name);
+                    $('#txtNoIDCard').val(data.data.ident_id);
+                    $('#txtAddress').val(data.data.address);
+                    $('#txtProvText').val(data.data.province).trigger('change');
+                    $('#txtCity').val(data.city.id).trigger('change');
+                    $('#txtAddressDom').val(data.data.address1);
+                    $('#txtCityDom').val(data.city_dom.id).trigger('change');
 
-                        
+                    if (data.city) {
+                        $('#txtCityText').val(data.city.id);
+                        listProvinsi(data.city.prov);
+                        $('#txtProvText').val(data.data.province).trigger('change');
+                        listCity(data.city.prov, data.city.id);
+                    }
+                    if (data.city_dom) {
+                        $('#txtCityDomText').val(data.city_dom.id);
+                        listProvinsiDomisili(data.city_dom.prov);
+                        $('#txtProvDomText').val(data.data.province1).trigger('change');
+                        listCityDom(data.city_dom.prov, data.city_dom.id);
+                    }
 
-                        $('#UserPhotoSrc').val(element.pic_url);
-                        $('#txtMemberID').val(element.member_id);
-                        $("#txtGender").val(element.sex).trigger('change');
-                        $('#txtName').val(element.member_name);
-                        $('#txtNoIDCard').val(element.ident_id);
-                        // $("#txtNoIDCard").attr("readonly", "readonly"); 
-                        $('#txtAddress').val(element.address);
-                        $('#txtProvText').val(element.province).trigger('change');
-                        $('#txtCity').val(element.city).trigger('change');
-                        $('#txtAddressDom').val(element.address1);
-                        $('#txtProvDomText').val(element.province1).trigger('change');
-                        $('#txtCityDom').val(element.city1).trigger('change');
-                        console.log($('#txtCityDom').val(), element.city1);
-                        // $('#txtBirthplace').val(element.birth_place);
+                    var dob =  data.data.date_birth
 
-                        var dob =  element.date_birth
-
-                        // alert(dob);
-
-                        f1.clear();
-                        
-                        f1 = flatpickr(document.getElementById('txtDOB'), {
-                            altInput: true,
-                            altFormat: "d-m-Y",
-                            dateFormat: "Y-m-d",
-                            disableMobile: "true",
-                            defaultDate : element.date_birth
-                        });
-
-
-
-                        $('#txtDOB').val(element.date_birth);
-
-                        f4 = flatpickr(document.getElementById('txtDtCreated'), {
-                            altInput: true,
-                            altFormat: "d-m-Y",
-                            dateFormat: "Y-m-d",
-                            disableMobile: "true",
-                            defaultDate : element.dt_created
-                        });
-
-
-
-                        $('#txtDtCreated').val(element.dt_created);
-
-
-                        $('#txtPhone').val(element.phone);
-                        $('#txtEmail').val(element.email);
-                        $("#txtEducation").val(element.last_educ).trigger('change');
-                        $('#txtJob').val(element.job).trigger('change');
-                        $('#txtJabatan').val(element.position);
-                        $("#txtStatMember").val(element.st_anggota).trigger('change');
-                        $("#txtIndustrial").val(element.position_id).trigger('change');
-                        $('#txtIndustrialName').val(element.position_name);
-
-                        $("#txtOfficeID").val(element.korda).trigger('change');
-                        listOffice(element.korda);
-
-                        if (element.st_kartu == 'Y') {
-
-                            $("#txtStatKartu").prop("checked", true);
-
-                        }
-
-                        else {
-
-                            $("#txtStatKartu").prop("checked", false);
-                        }
-
-                        if (element.st_pelatihan == 'Y') {
-
-                            $("#txtStatTrainee").prop("checked", true);
-
-                        }
-
-                        else {
-
-                            $("#txtStatTrainee").prop("checked", false);
-                        }
-
-                        if (element.st_bnsp == 'Y') {
-
-                            $("#txtStatCert").prop("checked", true);
-
-                        }
-
-                        else {
-
-                            $("#txtStatCert").prop("checked", false);
-                        }
-
-                        var drEvent2 = $('#txtKTP').dropify();
-                        drEvent2 = drEvent2.data('dropify');
-                        drEvent2.resetPreview();
-                        drEvent2.clearElement();
-                        drEvent2.settings.defaultFile = element.ktp_url;
-                        drEvent2.destroy();
-                        drEvent2.init();
-                        $('.dropify#txtKTP').dropify({
-                        defaultFile: element.ktp_url,
-                        });
-
-                        $('#FileKTPSrc').val(element.ktp_url);
-
-                       
-                       
-                       var drEvent3 = $('#txtIjazah').dropify();
-                       drEvent3 = drEvent3.data('dropify');
-                       drEvent3.resetPreview();
-                       drEvent3.clearElement();
-                       drEvent3.settings.defaultFile = element.ijasah_url;
-                       drEvent3.destroy();
-                       drEvent3.init();
-                       $('.dropify#txtIjazah').dropify({
-                       defaultFile: element.ijasah_url,
-                       });
-
-                       $('#FileIjazahSrc').val(element.ijasah_url);
-
-
-
-
-
-
-                        $.unblockUI();
-                  
+                    f1.clear();
+                    
+                    f1 = flatpickr(document.getElementById('txtDOB'), {
+                        altInput: true,
+                        altFormat: "d-m-Y",
+                        dateFormat: "Y-m-d",
+                        disableMobile: "true",
+                        defaultDate : data.data.date_birth
                     });
 
 
 
+                    $('#txtDOB').val(data.data.date_birth);
+
+                    f4 = flatpickr(document.getElementById('txtDtCreated'), {
+                        altInput: true,
+                        altFormat: "d-m-Y",
+                        dateFormat: "Y-m-d",
+                        disableMobile: "true",
+                        defaultDate : data.data.dt_created
+                    });
 
 
-                   
+
+                    $('#txtDtCreated').val(data.data.dt_created);
+
+
+                    $('#txtPhone').val(data.data.phone);
+                    $('#txtEmail').val(data.data.email);
+                    $("#txtEducation").val(data.data.last_educ).trigger('change');
+                    $('#txtJob').val(data.data.job).trigger('change');
+                    $('#txtJabatan').val(data.data.position);
+                    $("#txtStatMember").val(data.data.st_anggota).trigger('change');
+                    $("#txtIndustrial").val(data.data.position_id).trigger('change');
+                    $('#txtIndustrialName').val(data.data.position_name);
+
+                    $("#txtOfficeID").val(data.data.korda).trigger('change');
+                    listOffice(data.data.korda);
+
+                    if (data.data.st_kartu == 'Y') {
+
+                        $("#txtStatKartu").prop("checked", true);
+
+                    }
+
+                    else {
+
+                        $("#txtStatKartu").prop("checked", false);
+                    }
+
+                    if (data.data.st_pelatihan == 'Y') {
+
+                        $("#txtStatTrainee").prop("checked", true);
+
+                    }
+
+                    else {
+
+                        $("#txtStatTrainee").prop("checked", false);
+                    }
+
+                    if (data.data.st_bnsp == 'Y') {
+
+                        $("#txtStatCert").prop("checked", true);
+
+                    }
+
+                    else {
+
+                        $("#txtStatCert").prop("checked", false);
+                    }
+
+                    var drEvent2 = $('#txtKTP').dropify();
+                    drEvent2 = drEvent2.data('dropify');
+                    drEvent2.resetPreview();
+                    drEvent2.clearElement();
+                    drEvent2.settings.defaultFile = data.data.ktp_url;
+                    drEvent2.destroy();
+                    drEvent2.init();
+                    $('.dropify#txtKTP').dropify({
+                    defaultFile: data.data.ktp_url,
+                    });
+
+                    $('#FileKTPSrc').val(data.data.ktp_url);
+
                     
-             
-
-                   
-                
-                } else {
-
-                    swal("Whops", (data['response']), "error");
                     
-                }
+                    var drEvent3 = $('#txtIjazah').dropify();
+                    drEvent3 = drEvent3.data('dropify');
+                    drEvent3.resetPreview();
+                    drEvent3.clearElement();
+                    drEvent3.settings.defaultFile = data.data.ijasah_url;
+                    drEvent3.destroy();
+                    drEvent3.init();
+                    $('.dropify#txtIjazah').dropify({
+                    defaultFile: data.data.ijasah_url,
+                    });
+
+                    $('#FileIjazahSrc').val(data.data.ijasah_url);
+
+
+
+
+
+
+                    $.unblockUI();
+                  
+
 
             }
         })

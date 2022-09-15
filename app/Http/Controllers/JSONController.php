@@ -190,6 +190,12 @@ class JSONController extends Controller
     public function listMasterProvinsi(Request $request)
     {
         $sqlWhere = '1=1';
+        $provinsi_id = $request->provinsi_id;
+
+        if (!empty($provinsi_id))
+        {
+            $sqlWhere = $sqlWhere . " and nama LIKE " . "'%" . $provinsi_id . "%'";
+        }
 
         $works = DB::table('provinsi')
                     ->selectRaw('id, TRIM(nama) as nama')
@@ -205,10 +211,16 @@ class JSONController extends Controller
         $sqlWhere = '1=1';
 
         $provinsi_id = $request->provinsi_id;
+        $id = $request->id;
 
         if (!empty($provinsi_id))
         {
             $sqlWhere = $sqlWhere . " and prov = " . "'" . $provinsi_id . "'";
+        }
+
+        if (!empty($id))
+        {
+            $sqlWhere = $sqlWhere . " and id = " . "'" . $id . "'";
         }
 
         $works = DB::table('kabupaten')
