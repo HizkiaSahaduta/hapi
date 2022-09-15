@@ -225,7 +225,7 @@ h6 {
             </div>
         </div>
 
-        <div class="col-lg-6 layout-spacing layout-spacing">
+        <div class="col-lg-4 layout-spacing layout-spacing">
             <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row mt-2">
@@ -245,7 +245,7 @@ h6 {
             </div>
         </div>
 
-        <div class="col-lg-6 layout-spacing layout-spacing">
+        <div class="col-lg-4 layout-spacing layout-spacing">
             <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                     <div class="row mt-2">
@@ -265,6 +265,31 @@ h6 {
                 </div>
             </div>
         </div>
+        <div class="col-lg-4 layout-spacing layout-spacing">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                    <div class="row mt-2">
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                            <h4 class="ml-auto">Total Kegiatan (KORDA)</h4>
+
+                            <div class="d-flex">
+                                <input id="start_period_kegiatan" class="form-control flatpickr flatpickr-input active mr-2" type="text" placeholder="Start Period" style="max-width: 125px;">
+                                <input id="end_period_kegiatan" class="form-control flatpickr flatpickr-input active " type="text" placeholder="End Period" style="max-width: 125px;">
+                                <button class="ml-auto btn btn-dark btn-block"  type="button" style="max-width: 125px;" id="searchPeriodKegiatan">
+                                    Search
+                                </button> 
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-content widget-content-area">
+
+                    <div id="chartContainerKordaKegiatan" style="height: 370px; width: 100%;"></div>
+
+                </div>
+            </div>
+        </div> 
 
         <div class="col-lg-6 layout-spacing layout-spacing">
             <div class="statbox widget box box-shadow">
@@ -328,6 +353,7 @@ h6 {
                 </div>
             </div>
         </div>
+               
     </div>
 </div>
 
@@ -667,6 +693,61 @@ function getChartStacked(title, label, dp, dp_penuh, container){
                             color: "#1b3098",
                             name: "Afiliasi",
                             dataPoints: dp_penuh
+                        },
+                    ]
+                });
+    chart.render();
+}
+
+function getChartStackedKegiatan(title, label, pelatihan, sertifikasi, pembimbingan, container) {
+    var chart = new CanvasJS.Chart(container, 
+                {
+                    animationEnabled: true,
+                    title: {
+                        text: title
+                    },
+                    subtitles:[
+                        {
+                            text: label,
+                            fontFamily: "Calibri",
+                            fontColor: "red",
+                            fontSize: 12
+                        }
+                    ],
+                    axisX: {
+                        title : "KORDA",
+                        includeZero: false
+                    },
+                    axisY: {
+                        title : "(Total)",
+                    },
+                    exportEnabled: true,
+                    toolTip: {
+                        shared: true,
+                        content: toolTipContent,
+                        enabled: true
+                    },
+                    data: [
+                        {        
+                            type: "stackedColumn",
+                            showInLegend: true,
+                            name: "Pelatihan",
+                            color: "#ddb739",
+                            dataPoints: pelatihan
+                        },
+                        {
+                            type: "stackedColumn",
+                            showInLegend: true,
+                            color: "#1b3098",
+                            name: "Sertifikasi",
+                            dataPoints: sertifikasi
+                        },
+                        {
+                            type: "stackedColumn",
+                            showInLegend: true,
+                            color: "#ff2e17",
+                            name: "Pembimbingan",
+                            dataPoints: pembimbingan
                         },
                     ]
                 });
@@ -1166,6 +1247,70 @@ function getlistTop5AnggotaKorda(period) {
                 $('#listTop5AnggotaKorda').html(rows);
                 
             }
+            
+        }
+    });
+
+}
+
+function getDashboardKegiatan(start_period, end_period) {
+
+    if (start_period == undefined) {
+        start_period = ''
+    }
+
+    if (end_period == undefined) {
+        end_period = ''
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "{{ url('getDashboardKegiatan') }}",
+        data: {
+            '_token': '{{ csrf_token() }}',
+            start_period: start_period,
+            end_period: end_period
+        },
+        success: function(data) {
+            console.log(data);
+            var pelatihan = [];
+            var sertifikasi = [];
+            var pembimbingan = [];
+
+            var cities = [];
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].descr == 'PELATIHAN') {
+                    pelatihan.push({ label: data[i].city, y: parseFloat(data[i].total_event), descr: data[i].descr });
+                    cities.push({city: data[i].city, index: i});
+                    sertifikasi.push({ label: data[i].city, y: 0, descr: 'SERTIFIKASI' });
+                    pembimbingan.push({ label: data[i].city, y: 0, descr: 'PEMBIMBINGAN' });
+                }                
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].descr == 'SERTIFIKASI') {
+                    var city = cities.filter(function(item) {
+                        if (data[i].city == item.city) {
+                            sertifikasi[item.index] = { label: data[i].city, y: parseFloat(data[i].total_event), descr: data[i].descr }
+                            return item
+                        }
+                    });
+                }
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].descr == 'PEMBIMBINGAN') {
+                    var city = cities.filter(function(item) {
+                        if (data[i].city == item.city) {
+                            pembimbingan[item.index] = { label: data[i].city, y: parseFloat(data[i].total_event), descr: data[i].descr }
+                            return item
+                        }
+                    });
+                }
+            }
+
+            getChartStackedKegiatan('', 'Total Kegiatan (KORDA)', pelatihan, sertifikasi, pembimbingan, 'chartContainerKordaKegiatan')
             
         }
     });
@@ -1710,6 +1855,7 @@ $(document).ready(function() {
     getListAnggotaKordaSertifikasi();
     getlistTop5AnggotaSertifikasi();
     getlistTop5AnggotaKorda();
+    getDashboardKegiatan();
 
     var f1 = flatpickr(document.getElementById('start'), {
         static: true,
@@ -1739,6 +1885,20 @@ $(document).ready(function() {
         disableMobile: "true",
     });
 
+    var f5 = flatpickr(document.getElementById('start_period_kegiatan'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });
+
+    var f6 = flatpickr(document.getElementById('end_period_kegiatan'), {
+        static: true,
+        altInput: true,
+        plugins: [new monthSelectPlugin({shorthand: false, dateFormat: "Ym", altFormat: "Ym"})],
+        disableMobile: "true",
+    });   
+
     
 
     $( "#start" ).change(function() {
@@ -1760,6 +1920,14 @@ $(document).ready(function() {
     $( "#period_top_korda" ).change(function() {
         var period = $('#period_top_korda').val()
         getlistTop5AnggotaKorda(period)
+    });
+
+    $("#searchPeriodKegiatan").click(function() {
+        var start_period = $('#start_period_kegiatan').val()
+        var end_period = $('#end_period_kegiatan').val()
+
+        getDashboardKegiatan(start_period, end_period);
+
     });
 
 });

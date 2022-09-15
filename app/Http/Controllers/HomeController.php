@@ -382,6 +382,44 @@ class HomeController extends Controller
         return response()->json($data);
     }
 
+    public function getDashboardKegiatan(Request $request)
+    {
+        $sqlWhere = "1=1";
+
+        $start_period = $request->start_period;
+        if(!$start_period)
+        {
+            $start_period = '';
+        }
+
+        $end_period = $request->end_period;
+        if(!$end_period)
+        {
+            $end_period = '';
+        }
+
+        if ($start_period)
+        {
+            if ($end_period)
+            {
+                $sqlWhere .= " and view_total_event_by_korda.periode BETWEEN " .  "'" . $start_period . "'" . "AND"  .  "'" . $end_period . "'";
+            }
+            else
+            {
+                $sqlWhere .= " and view_total_event_by_korda.periode BETWEEN " .  "'" . $start_period . "'" . "AND"  .  "'" . $start_period . "'";
+            }
+        }
+
+        $datas = DB::table('view_total_event_by_korda')
+                ->selectRaw("TRIM(view_total_event_by_korda.city) as city, view_total_event_by_korda.descr, SUM( view_total_event_by_korda.total_training ) as total_event")
+                ->whereRaw($sqlWhere)
+                ->groupBy('view_total_event_by_korda.city', 'view_total_event_by_korda.descr')
+                ->get();
+
+        return response()->json($datas);
+        
+    }
+
 
 
     

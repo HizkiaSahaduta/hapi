@@ -127,6 +127,7 @@ Route::post('getListAnggotaKorda', 'HomeController@getListAnggotaKorda')->name('
 Route::post('getListAnggotaKordaTersertifikasi', 'HomeController@getListAnggotaKordaTersertifikasi')->name('getListAnggotaKordaTersertifikasi');
 Route::post('listTop5AnggotaSertifikasi', 'HomeController@listTop5AnggotaSertifikasi')->name('listTop5AnggotaSertifikasi');
 Route::post('listTop5AnggotaKorda', 'HomeController@listTop5AnggotaKorda')->name('listTop5AnggotaKorda');
+Route::post('getDashboardKegiatan', 'HomeController@getDashboardKegiatan')->name('getDashboardKegiatan');
 
 //-- Master Pekerjaan
 Route::get('MasterPekerjaan', 'MasterPekerjaanController@index')->name('MasterPekerjaan');
