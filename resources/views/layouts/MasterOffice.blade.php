@@ -612,9 +612,13 @@ $(document).ready(function() {
                             swal("Info", "Data sukses disimpan", "info")
                         }
                     );
+
+                    window.location.reload();
+
                 }
                 else if ((data['response']) == "Data sukses diperbaharui") {
                     swal("Sukses", (data['response']), "success");
+                    window.location.reload();
                 }
                 else{
                     swal("Whops", (data['response']), "error");

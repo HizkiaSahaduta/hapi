@@ -41,7 +41,7 @@ class JSONController extends Controller
     public function getPekerjaanID(){
 
         $id = DB::table('pekerjaan')
-                    ->selectRaw('max(RIGHT(RTRIM(id), 1)) + 1 as id')
+                    ->selectRaw('max(RIGHT(RTRIM(id), 3)) + 1 as id')
                     ->value('id');
 
         $id = str_pad($id, 3, '0', STR_PAD_LEFT);
